@@ -6,6 +6,7 @@ import textwrap
 import sys
 import os
 import data
+import enemies
 
 screen_width = 100
 
@@ -38,8 +39,23 @@ def help_menu():
 
 def play():
     myPlayer = data.Player("Test Player")
-    myEnemy = data.Imp()
-    data.combat(myPlayer, myEnemy)
+    print('############################')
+    print('#       1 - Battle         #')
+    print('#      2 - See stats       #')
+    print('#3 - Assign aptitude points#')
+    print('############################')
+
+    while True:
+        option = int(input("> "))
+        if option == (1):
+            enemy = enemies.Imp()
+            data.combat(myPlayer, enemy)
+        elif option == (2):
+            data.showStats(myPlayer)
+        elif option == (3):
+            pass
+        else:
+            pass
 
 if __name__ == "__main__":
     title_screen()
