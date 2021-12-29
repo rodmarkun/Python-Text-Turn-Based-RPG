@@ -8,16 +8,14 @@ import os
 import data
 import enemies
 
-screen_width = 100
-
 ##### Title Screen #####
 def title_screen_selections():
     option = int(input("> "))
-    if option == (1):
+    if option == 1:
         play()
-    elif option == (2):
+    elif option == 2:
         help_menu()
-    elif option == (3):
+    elif option == 3:
         sys.exit()
     while option not in [1,2,3]:
         print("Please enter a valid command")
@@ -47,13 +45,13 @@ def play():
 
     while True:
         option = int(input("> "))
-        if option == (1):
+        if option == 1:
             enemy = enemies.Imp()
             data.combat(myPlayer, enemy)
-        elif option == (2):
+        elif option == 2:
             data.showStats(myPlayer)
-        elif option == (3):
-            pass
+        elif option == 3:
+            data.assignAptitudePoints(myPlayer)
         else:
             pass
 

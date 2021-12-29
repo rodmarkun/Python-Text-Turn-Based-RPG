@@ -9,7 +9,9 @@ class Battler():
 class Player(Battler):
 
     def __init__(self, name) -> None:
-        stats = {'hp' : 20,
+        stats = {'maxHp' : 20,
+                    'hp' : 20,
+                    'maxMp' : 10,
                     'mp' : 10,
                     'atk' : 10,
                     'def' : 10,
@@ -72,16 +74,17 @@ def addExp(player, exp):
         player.xp -= player.xpToNextLvl
         player.lvl += 1
         player.xpToNextLvl = round(player.xpToNextLvl * 1.5)
+        player.stats['hp'] = player.stats['maxHp']
         for stat in player.stats:
-            player.stats[stat] += 2
+            player.stats[stat] += 1
         print("Level up! You are now level {}.".format(player.lvl))
 
 def showStats(player):
     print('############################')
     print('#          STATS           #')
     print('############################')
-    print('HP: {}'.format(player.stats['hp']))
-    print('MP: {}'.format(player.stats['mp']))
+    print('HP: {}/{}'.format(player.stats['hp'], player.stats['maxHp']))
+    print('MP: {}/{}'.format(player.stats['mp'],  player.stats['maxMp']))
     print('ATK: {}'.format(player.stats['atk']))
     print('DEF: {}'.format(player.stats['def']))
     print('MATK: {}'.format(player.stats['matk']))
@@ -97,3 +100,59 @@ def showStats(player):
     print('WIS: {}'.format(player.aptitudes['wis']))
     print('CONST: {}'.format(player.aptitudes['const']))
     print('############################')
+
+def showAptitudes(player):
+    print('############################')
+    print('#        POINTS: {}        #'.format(player.aptitudePoints))
+    print('#    SELECT AN APTITUDE    #')
+    print('############################')
+    print('1 - STR (Current: {})'.format(player.aptitudes['str']))
+    print('2 - DEX (Current: {})'.format(player.aptitudes['dex']))
+    print('3 - INT (Current: {})'.format(player.aptitudes['int']))
+    print('4 - WIS (Current: {})'.format(player.aptitudes['wis']))
+    print('5 - CONST (Current: {})'.format(player.aptitudes['const']))
+    print('6 - Quit menu')
+    print('############################')
+
+def assignAptitudePoints(player):
+    showAptitudes(player)
+    option = int(input("> "))
+    optionsDictionary = {1 : 'str',
+                        2 : 'dex',
+                        3 : 'int',
+                        4 : 'wis',
+                        5 : 'const'}
+    while option != 6:
+        if option in range(1, 7):
+            if player.aptitudePoints >=1:
+                aptitudeToAssign = optionsDictionary[option]
+                player.aptitudes[aptitudeToAssign] += 1
+                print('{} is now {}!'.format(aptitudeToAssign, player.aptitudes[aptitudeToAssign]))
+                updateStatsToAptitudes(player, aptitudeToAssign)
+                player.aptitudePoints -= 1
+            else:
+                print('Not enough points!')
+        else:
+            print('Not a valid character!')
+        option = int(input("> "))
+
+'''
+When an aptitude is leveled up, certain stats also increase:
+STR -> ATK + 2
+DEX -> SPD + 1, CRIT + 1
+INT -> MATK + 2
+WIS -> MP + 5
+CONST -> MAXHP + 5
+'''
+def updateStatsToAptitudes(player, aptitude):
+    if aptitude == 'str':
+        player.stats['atk'] += 2
+    elif aptitude == 'dex':
+        player.stats['speed'] += 1
+        player.stats['critCh'] += 1
+    elif aptitude == 'int':
+        player.stats['matk'] += 2
+    elif aptitude == 'wis':
+        player.stats['mp'] += 5
+    elif aptitude == 'const':
+        player.stats['maxHp'] += 5
