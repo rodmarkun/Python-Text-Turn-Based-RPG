@@ -6,54 +6,44 @@ import textwrap
 import sys
 import os
 import data
-import enemies
+import random
+import enemies, text
 
 ##### Title Screen #####
 def title_screen_selections():
+    text.title_screen()
     option = int(input("> "))
     if option == 1:
         play()
     elif option == 2:
-        help_menu()
+        text.help_menu()
     elif option == 3:
         sys.exit()
     while option not in [1,2,3]:
         print("Please enter a valid command")
         option = int(input("> "))
 
-def title_screen():
-    print('############################')
-    print('# Welcome to the text RPG! #')
-    print('############################')
-    print('#         1 - Play         #')
-    print('#         2 - Help         #')
-    print('#         3 - Quit         #')
-    print('############################')
-    title_screen_selections()
-
-def help_menu():
-    os.system('clear')
-    print("Do you really need help in here? LMAO")
-
 def play():
     myPlayer = data.Player("Test Player")
-    print('############################')
-    print('#       1 - Battle         #')
-    print('#      2 - See stats       #')
-    print('#3 - Assign aptitude points#')
-    print('############################')
 
-    while True:
+    while myPlayer.alive:
+        text.play_menu()
         option = int(input("> "))
         if option == 1:
-            enemy = enemies.Imp()
+            randomChosenEnemy = random.randint(1, 2)
+            if randomChosenEnemy == 1:
+                enemy = enemies.Imp()
+            elif randomChosenEnemy == 2:
+                enemy = enemies.Golem()
             data.combat(myPlayer, enemy)
         elif option == 2:
-            data.showStats(myPlayer)
+            text.showStats(myPlayer)
         elif option == 3:
             data.assignAptitudePoints(myPlayer)
+        elif option == 4:
+            data.fullyHeal(myPlayer)
         else:
             pass
 
 if __name__ == "__main__":
-    title_screen()
+    title_screen_selections()
