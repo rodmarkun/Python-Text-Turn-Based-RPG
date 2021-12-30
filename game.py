@@ -5,9 +5,10 @@ import cmd
 import textwrap
 import sys
 import os
-import data
+import combat
 import random
 import enemies, text
+import inventory
 
 ##### Title Screen #####
 def title_screen_selections():
@@ -23,8 +24,23 @@ def title_screen_selections():
         print("Please enter a valid command")
         option = int(input("> "))
 
+def inventory_selections(player):
+    option = input("> ")
+    while option.lower() != 'q':
+        if option.lower() == 's':
+            pass
+        elif option.lower() == 'd':
+            player.inventory.drop_item()
+        else:
+            pass
+        option = input("> ")
+
 def play():
-    myPlayer = data.Player("Test Player")
+    myPlayer = combat.Player("Test Player")
+    potions = inventory.Item('Health Potion', 'a', 4, 10)
+    knife = inventory.Item('Knife', 'a', 1, 10)
+    potions.add_to_inventory(myPlayer.inventory)
+    knife.add_to_inventory(myPlayer.inventory)
 
     while myPlayer.alive:
         text.play_menu()
@@ -35,13 +51,17 @@ def play():
                 enemy = enemies.Imp()
             elif randomChosenEnemy == 2:
                 enemy = enemies.Golem()
-            data.combat(myPlayer, enemy)
+            combat.combat(myPlayer, enemy)
         elif option == 2:
             text.showStats(myPlayer)
         elif option == 3:
-            data.assignAptitudePoints(myPlayer)
+            combat.assignAptitudePoints(myPlayer)
         elif option == 4:
-            data.fullyHeal(myPlayer)
+            text.inventory_menu()
+            myPlayer.inventory.show_inventory()
+            inventory_selections(myPlayer)
+        elif option == 5:
+            combat.fullyHeal(myPlayer)
         else:
             pass
 

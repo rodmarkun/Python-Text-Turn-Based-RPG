@@ -15,6 +15,7 @@ def play_menu():
     print('#       1 - Battle         #')
     print('#      2 - See stats       #')
     print('#3 - Assign aptitude points#')
+    print('#      4 - Inventory       #')
     print('############################')
 
 def showStats(player):
@@ -50,4 +51,11 @@ def showAptitudes(player):
     print('4 - WIS (Current: {})'.format(player.aptitudes['wis']))
     print('5 - CONST (Current: {})'.format(player.aptitudes['const']))
     print('6 - Quit menu')
+    print('############################')
+
+def inventory_menu():
+    print('############################')
+    print('#    S - Sell an item      #')
+    print('#    D - Drop an item      #')
+    print('#        Q - Quit          #')
     print('############################')

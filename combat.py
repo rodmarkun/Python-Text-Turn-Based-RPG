@@ -1,5 +1,6 @@
 import random
 import text
+import inventory
 
 class Battler():
     def __init__(self, name, stats) -> None:
@@ -34,6 +35,7 @@ class Player(Battler):
                     'const' : 5
         }
         self.aptitudePoints = 5
+        self.inventory = inventory.Inventory()
 
 class Enemy(Battler):
 
