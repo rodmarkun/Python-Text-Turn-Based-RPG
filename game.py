@@ -5,10 +5,8 @@ import cmd
 import textwrap
 import sys
 import os
-import combat
 import random
-import enemies, text
-import inventory
+import combat, enemies, text, player, inventory, items
 
 ##### Title Screen #####
 def title_screen_selections():
@@ -28,19 +26,21 @@ def inventory_selections(player):
     option = input("> ")
     while option.lower() != 'q':
         if option.lower() == 's':
-            pass
+            player.money += player.inventory.sell_item()
         elif option.lower() == 'd':
             player.inventory.drop_item()
+        elif option.lower() == 'e':
+            player.equip_item(player.inventory.equip_item())
         else:
             pass
         option = input("> ")
 
 def play():
-    myPlayer = combat.Player("Test Player")
+    myPlayer = player.Player("Test Player")
     potions = inventory.Item('Health Potion', 'a', 4, 10)
-    knife = inventory.Item('Knife', 'a', 1, 10)
     potions.add_to_inventory(myPlayer.inventory)
-    knife.add_to_inventory(myPlayer.inventory)
+    items.debug_sword.add_to_inventory(myPlayer.inventory)
+    items.dagger.add_to_inventory(myPlayer.inventory)
 
     while myPlayer.alive:
         text.play_menu()
@@ -55,13 +55,13 @@ def play():
         elif option == 2:
             text.showStats(myPlayer)
         elif option == 3:
-            combat.assignAptitudePoints(myPlayer)
+            myPlayer.assign_aptitude_points()
         elif option == 4:
             text.inventory_menu()
             myPlayer.inventory.show_inventory()
             inventory_selections(myPlayer)
         elif option == 5:
-            combat.fullyHeal(myPlayer)
+            combat.fully_heal(myPlayer)
         else:
             pass
 

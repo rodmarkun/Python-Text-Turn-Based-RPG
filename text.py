@@ -39,6 +39,15 @@ def showStats(player):
     print('WIS: {}'.format(player.aptitudes['wis']))
     print('CONST: {}'.format(player.aptitudes['const']))
     print('############################')
+    print('MONEY: {}'.format(player.money))
+    print('############################')
+    print('#        EQUIPMENT         #')
+    print('############################')
+    for equipment in player.equipment:
+        if player.equipment[equipment] is not None:
+            print('{}: {}'.format(equipment, player.equipment[equipment].name))
+        else:
+            print('{}:'.format(equipment))
 
 def showAptitudes(player):
     print('############################')
@@ -57,5 +66,6 @@ def inventory_menu():
     print('############################')
     print('#    S - Sell an item      #')
     print('#    D - Drop an item      #')
+    print('#    E - Equip an item     #')
     print('#        Q - Quit          #')
     print('############################')

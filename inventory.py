@@ -13,23 +13,42 @@ class Inventory():
         print('\nWhich item do you want to drop? ["0" to Quit]')
         self.show_inventory()
         i = int(input("> "))
-        # TODO: Control out of range dropping
         if i == 0:
             print('Closing inventory...')
-        else:
+        elif i <= len(self.items):
             item = self.items[i-1]
-            if item.amount == 1:
+            item.drop()
+            if item.amount <= 0:
                 self.items.pop(i - 1)
-                print('You dropped 1 {}.\nNow your inventory looks like this:'.format(
-                    item.name))
-            else:
-                print('You have {} of this item, how many do you want to drop?'.format(item.amount))
-                amountToDrop = int(input("> "))
-                # TODO: Control amount to drop
-                item.amount -= amountToDrop
-                print('You dropped {} {}.\nNow your inventory looks like this:'.format(amountToDrop,
-                    item.name))
             self.show_inventory()
+
+    def sell_item(self):
+        print('\nWhich item do you want to sell? ["0" to Quit]')
+        self.show_inventory()
+        i = int(input("> "))
+        if i == 0:
+            print('Closing inventory...')
+        elif i <= len(self.items):
+            item = self.items[i-1]
+            moneyForItem = item.sell()
+            if item.amount <= 0:
+                self.items.pop(i - 1)
+            return moneyForItem
+
+    def equip_item(self):
+        print('\nWhich item do you want to equip? ["0" to Quit]')
+        self.show_inventory()
+        i = int(input("> "))
+        if i == 0:
+            print('Closing inventory...')
+            return None
+        elif i <= len(self.items):
+            item = self.items[i-1]
+            if type(item) == Equipment:
+                self.items.pop(i - 1)
+                return item
+            else:
+                return None
 
     @property
     def total_worth(self):
@@ -49,6 +68,21 @@ class Item():
     @property
     def total_worth(self):
         return self.amount * self.individual_value
+
+    def drop(self):
+        if self.amount == 1:
+            print('You dropped 1 {}.\nNow your inventory looks like this:'.format(
+                self.name))
+            self.amount -= 1
+        else:
+            print('You have {} of this item, how many do you want to drop?'.format(self.amount))
+            amountToDrop = int(input("> "))
+            if amountToDrop > self.amount:
+                print('You don\'t have that many!')
+            else:
+                self.amount -= amountToDrop
+                print('You dropped {} {}.\nNow your inventory looks like this:'.format(amountToDrop,
+                    self.name))
 
     def sell(self):
         if self.amount >= 1:
@@ -79,3 +113,20 @@ class Item():
         if not alreadyInInventory:
             inventory.items.append(self)
         print('{} {} was added to your inventory!'.format(self.amount, self.name))
+
+'''
+Equipment shall be items but with an added dictionary statChangeList with stats to change
+and a number with the amount of points that stat changes, like:
+{'hp' : 3
+    'atk' : 2
+    'speed' : -2
+}
+This would increase hp by 3, atk by 2 and decrease speed by 2.
+'''
+
+# TODO: It could be interesting to add skills to some weapons
+class Equipment(Item):
+    def __init__(self, name, description, amount, individual_value, statChangeList, equipmentType) -> None:
+        super().__init__(name, description, amount, individual_value)
+        self.statChangeList = statChangeList
+        self.equipmentType = equipmentType
