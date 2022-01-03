@@ -1,6 +1,7 @@
 import inventory
 import text
 import combat
+import skills
 
 class Player(combat.Battler):
 
@@ -33,6 +34,8 @@ class Player(combat.Battler):
         self.equipment = {'Weapon' : None,
                             'Armor' : None}
         self.money = 0
+        self.combos = []
+        self.spells = [skills.fireball]
     
     def equip_item(self, equipment):
         if equipment != None:
@@ -50,8 +53,8 @@ class Player(combat.Battler):
                     print('{} +{}'.format(stat, statChangeList[stat]))
             else:
                 print('{} is not equipable.'.format(equipment.name))
-        else:
-            print('Please choose an object to equip')
+        text.inventory_menu()
+        self.inventory.show_inventory()
 
     def add_exp(self, exp):
         self.xp += exp
@@ -60,10 +63,11 @@ class Player(combat.Battler):
             self.xp -= self.xpToNextLvl
             self.lvl += 1
             self.xpToNextLvl = round(self.xpToNextLvl * 1.5)
-            combat.fully_heal(self)
             for stat in self.stats:
                 self.stats[stat] += 1
             self.aptitudePoints += 1
+            combat.fully_heal(self)
+            self.stats['mp'] = self.stats['maxMp']
             print("Level up! You are now level {}.".format(self.lvl))
 
     def assign_aptitude_points(self):

@@ -1,4 +1,6 @@
 import random
+import skills
+import text
 
 class Battler():
     def __init__(self, name, stats) -> None:
@@ -12,41 +14,55 @@ class Enemy(Battler):
         super().__init__(name, stats)
         self.xpReward = xpReward
 
-def take_dmg(attacker, defender):
+def normal_attack(attacker, defender):
+    print('{} attacks!'.format(attacker.name))
     dmg = round(attacker.stats['atk'] * (100/(100 + defender.stats['def'])))
     if attacker.stats['critCh'] > random.randint(0, 100):
         print('Critical blow!')
         dmg *= 2
+    take_dmg(attacker, defender, dmg)
+
+def take_dmg(attacker, defender, dmg):
     if dmg < 0: dmg = 0
     defender.stats['hp'] -= dmg
     print('{} takes {} damage!'.format(defender.name, dmg))
     if defender.stats['hp'] <= 0:
         print('{} has been slain.'.format(defender.name))
         defender.alive = False
-    else:
-        print('{} now has {} hp'.format(defender.name, defender.stats['hp']))
 
 def combat(player, enemy):
-    print('#######################')
+    print('############################')
     print('A wild {} has appeared!'.format(enemy.name))
     while player.alive and enemy.alive:
-        cmd = input('Attack? (yes): ').lower()
-        if 'yes' in cmd:
-            print('{} takes the opportunity to attack!'.format(player.name))
-            take_dmg(player, enemy)
+        text.combat_menu(player, enemy)
+        cmd = input('> ').lower()
+        if 'a' in cmd:
+            normal_attack(player, enemy)
             if enemy.alive == True:
-                print('{} takes the opportunity to attack!'.format(enemy.name))
-                take_dmg(enemy, player)
+                normal_attack(enemy, player)
+        elif 's' in cmd:
+            # TODO: This needs more control
+            text.spell_menu(player)
+            option = int(input("> "))
+            if option != 0:
+                skill_effect(player.spells[option - 1], player, enemy)
+                if enemy.alive == True:
+                    normal_attack(enemy, player)
         else:
             pass
     if player.alive:
-        player.addExp(enemy.xpReward)
+        player.add_exp(enemy.xpReward)
 
 def heal(target, amount):
     if target.stats['hp'] + amount > target.stats['maxHp']:
         target.stats['hp'] = target.stats['maxHp']
     else:
         target.stats['hp'] += amount
+
+def skill_effect(skill, attacker, defender):
+    if type(skill) == skills.SimpleOffensiveSpell:
+        dmg = skill.effect(attacker, defender)
+        take_dmg(attacker, defender, dmg)
 
 def fully_heal(target):
     target.stats['hp'] = target.stats['maxHp']

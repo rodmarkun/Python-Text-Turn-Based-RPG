@@ -48,6 +48,7 @@ class Inventory():
                 self.items.pop(i - 1)
                 return item
             else:
+                print('Please choose an equipable object.')
                 return None
 
     @property

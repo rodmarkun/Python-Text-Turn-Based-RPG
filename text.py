@@ -69,3 +69,23 @@ def inventory_menu():
     print('#    E - Equip an item     #')
     print('#        Q - Quit          #')
     print('############################')
+
+def combat_menu(player, enemy):
+    print('############################')
+    print('{} - HP: {}/{} - MP: {}/{}'.format(player.name, player.stats['hp'], player.stats['maxHp'],
+                                                player.stats['mp'], player.stats['maxMp']))
+    print('{} - HP: {}/{}'.format(enemy.name, enemy.stats['hp'], enemy.stats['maxHp']))
+    print('############################')
+    print('#       A - Attack         #')
+    print('#       C - Combos         #')
+    print('#       S - Spells         #')
+    print('############################')
+
+def spell_menu(player):
+    print('############################')
+    print('     SPELLS ["0" to Quit]   ')
+    print('############################')
+    index = 1
+    for s in player.spells:
+            print(str('{} - {}'.format(index, s.name)))
+            index += 1
