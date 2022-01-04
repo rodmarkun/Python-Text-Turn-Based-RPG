@@ -60,6 +60,7 @@ class BuffDebuff():
         self.statToChange = statToChange
         self.amountToChange = amountToChange
         self.turns = turns
+        self.diference = 0
 
     def activate(self):
         self.target.buffsAndDebuffs.append(self)
@@ -69,11 +70,18 @@ class BuffDebuff():
         else:
             print('{} has their {} buffed by {}% for {} turns'.format(self.target.name, 
                                         self.statToChange, self.amountToChange * 100, self.turns))
-        difference = int(self.target.stats[self.statToChange] * self.amountToChange)
-        self.target.stats[self.statToChange] += difference
-        if self.turns == 0:
-            self.target.buffsAndDebuffs.remove(self)
-            self.target.stats[self.statToChange] -= difference
+        self.difference = int(self.target.stats[self.statToChange] * self.amountToChange)
+        self.target.stats[self.statToChange] += self.difference
+        
+    def check_turns(self):
+        self.turns -= 1
+        if self.turns <= 0:
+            self.deactivate()
+
+    def deactivate(self):
+        print('The effect of {} has ended'.format(self.name))
+        self.target.buffsAndDebuffs.remove(self)
+        self.target.stats[self.statToChange] -= self.difference
 
 fireball = SimpleOffensiveSpell('Fireball', '', 15, 3)
 divineBlessing = SimpleHealingSpell('Divine Blessing', '', 8, 4)

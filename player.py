@@ -29,7 +29,7 @@ class Player(combat.Battler):
                     'wis' : 5,
                     'const' : 5
         }
-        self.aptitudePoints = 5
+        self.aptitudePoints = 0
         self.inventory = inventory.Inventory()
         self.equipment = {'Weapon' : None,
                             'Armor' : None}
@@ -40,19 +40,23 @@ class Player(combat.Battler):
     def equip_item(self, equipment):
         if equipment != None:
             if type(equipment) == inventory.Equipment:
-                actualEquipment = self.equipment[equipment.equipmentType]
+                actualEquipment = self.equipment[equipment.objectType]
                 if actualEquipment != None:
                     actualEquipment.add_to_inventory(self.inventory)
                     for stat in actualEquipment.statChangeList:
                         self.stats[stat] -= actualEquipment.statChangeList[stat]
-                self.equipment[equipment.equipmentType] = equipment
+                self.equipment[equipment.objectType] = equipment
                 print('{} has been equipped.'.format(equipment.name))
-                statChangeList = equipment.statChangeList
-                for stat in statChangeList:
-                    self.stats[stat] += statChangeList[stat]
-                    print('{} +{}'.format(stat, statChangeList[stat]))
+                print(equipment.show_stats())
             else:
                 print('{} is not equipable.'.format(equipment.name))
+        text.inventory_menu()
+        self.inventory.show_inventory()
+
+    def use_item(self, item):
+        if item != None:
+            if type(item) == inventory.Potion:
+                item.activate(self)
         text.inventory_menu()
         self.inventory.show_inventory()
 
@@ -68,7 +72,7 @@ class Player(combat.Battler):
             self.aptitudePoints += 1
             combat.fully_heal(self)
             self.stats['mp'] = self.stats['maxMp']
-            print("Level up! You are now level {}.".format(self.lvl))
+            print("Level up! You are now level {}. You have {} aptitude points".format(self.lvl, self.aptitudePoints))
 
     def assign_aptitude_points(self):
         text.showAptitudes(self)

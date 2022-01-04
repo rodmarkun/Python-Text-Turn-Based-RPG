@@ -64,6 +64,7 @@ def showAptitudes(player):
 
 def inventory_menu():
     print('############################')
+    print('#    U - Use an item       #')
     print('#    S - Sell an item      #')
     print('#    D - Drop an item      #')
     print('#    E - Equip an item     #')

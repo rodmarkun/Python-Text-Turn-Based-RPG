@@ -1,3 +1,5 @@
+import combat
+
 class Inventory():
 
     def __init__(self) -> None:
@@ -6,7 +8,7 @@ class Inventory():
     def show_inventory(self):
         index = 1
         for item in self.items:
-            print(str('{} - [x{}] {}'.format(index, item.amount, item.name)))
+            print(str('{} - {}'.format(index, item.show_info())))
             index += 1
 
     def drop_item(self):
@@ -51,6 +53,24 @@ class Inventory():
                 print('Please choose an equipable object.')
                 return None
 
+    def use_item(self):
+        print('\nWhich item do you want to use? ["0" to Quit]')
+        self.show_inventory()
+        i = int(input("> "))
+        if i == 0:
+            print('Closing inventory...')
+            return None
+        elif i <= len(self.items):
+            item = self.items[i-1]
+            if item.objectType == 'Consumable':
+                item.amount -= 1
+                if item.amount <= 0:
+                    self.items.pop(i - 1)
+                return item
+            else:
+                print('Please choose a consumable object.')
+                return None
+
     @property
     def total_worth(self):
         totalWorth = 0
@@ -60,11 +80,12 @@ class Inventory():
             
 class Item():
 
-    def __init__(self, name, description, amount, individual_value) -> None:
+    def __init__(self, name, description, amount, individual_value, objectType) -> None:
         self.name = name
         self.description = description
         self.amount = amount
         self.individual_value = individual_value
+        self.objectType = objectType
 
     @property
     def total_worth(self):
@@ -114,6 +135,9 @@ class Item():
         if not alreadyInInventory:
             inventory.items.append(self)
         print('{} {} was added to your inventory!'.format(self.amount, self.name))
+    
+    def show_info(self):
+        return '[x{}] {} ({})'.format(self.amount, self.name, self.objectType)
 
 '''
 Equipment shall be items but with an added dictionary statChangeList with stats to change
@@ -127,7 +151,32 @@ This would increase hp by 3, atk by 2 and decrease speed by 2.
 
 # TODO: It could be interesting to add skills to some weapons
 class Equipment(Item):
-    def __init__(self, name, description, amount, individual_value, statChangeList, equipmentType) -> None:
-        super().__init__(name, description, amount, individual_value)
+    def __init__(self, name, description, amount, individual_value, objectType, statChangeList) -> None:
+        super().__init__(name, description, amount, individual_value, objectType)
         self.statChangeList = statChangeList
-        self.equipmentType = equipmentType
+    
+    def show_info(self):
+        return '[x{}] {} ({}) {}'.format(self.amount, self.name, self.objectType, self.show_stats())
+    
+    def show_stats(self):
+        statsString = '[ '
+        for stat in self.statChangeList:
+            sign = '+'
+            if self.statChangeList[stat] < 0:
+                sign = ''
+            statsString += '{} {}{} '.format(stat, sign, self.statChangeList[stat])
+        statsString += ']'
+        return statsString
+
+class Potion(Item):
+    def __init__(self, name, description, amount, individual_value, objectType, stat, amountToChange) -> None:
+        super().__init__(name, description, amount, individual_value, objectType)
+        self.stat = stat
+        self.amountToChange = amountToChange
+
+    def activate(self, caster):
+        print('{} uses a {}!'.format(caster.name, self.name))
+        if self.stat == 'hp':
+            combat.heal(caster, self.amountToChange)
+        elif self.stat == 'mp':
+            combat.recover_mp(caster, self.amountToChange)

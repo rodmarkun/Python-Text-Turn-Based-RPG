@@ -53,13 +53,21 @@ def combat(player, enemy):
                     normal_attack(enemy, player)
 
         # A turn has passed
-        for buffdebuff in player.buffsAndDebuffs:
-            buffdebuff.turns -= 1
-        for buffdebuff in enemy.buffsAndDebuffs:
-            buffdebuff.turns -= 1
+        for bd in player.buffsAndDebuffs:
+            bd.check_turns()
+        for bd in enemy.buffsAndDebuffs:
+            bd.check_turns()
     if player.alive:
-        player.buffsAndDebuffs.clear()
+        for bd in player.buffsAndDebuffs:
+            bd.deactivate()
         player.add_exp(enemy.xpReward)
+
+def recover_mp(target, amount):
+    if target.stats['mp'] + amount > target.stats['maxMp']:
+        target.stats['mp'] = target.stats['maxMp']
+    else:
+        target.stats['mp'] += amount
+    print('{} recovers {} mp!'.format(target.name, amount))
 
 def heal(target, amount):
     if target.stats['hp'] + amount > target.stats['maxHp']:
