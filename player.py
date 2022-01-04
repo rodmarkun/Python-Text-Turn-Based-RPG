@@ -35,7 +35,7 @@ class Player(combat.Battler):
                             'Armor' : None}
         self.money = 0
         self.combos = []
-        self.spells = [skills.fireball]
+        self.spells = [skills.fireball, skills.divineBlessing, skills.benettFantasticVoyage]
     
     def equip_item(self, equipment):
         if equipment != None:

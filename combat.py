@@ -7,6 +7,7 @@ class Battler():
         self.name = name
         self.stats = stats
         self.alive = True
+        self.buffsAndDebuffs = []
 
 class Enemy(Battler):
 
@@ -36,6 +37,8 @@ def combat(player, enemy):
     while player.alive and enemy.alive:
         text.combat_menu(player, enemy)
         cmd = input('> ').lower()
+        while cmd not in ['a', 'c', 's']:
+            cmd = input('> ').lower()
         if 'a' in cmd:
             normal_attack(player, enemy)
             if enemy.alive == True:
@@ -48,9 +51,14 @@ def combat(player, enemy):
                 skill_effect(player.spells[option - 1], player, enemy)
                 if enemy.alive == True:
                     normal_attack(enemy, player)
-        else:
-            pass
+
+        # A turn has passed
+        for buffdebuff in player.buffsAndDebuffs:
+            buffdebuff.turns -= 1
+        for buffdebuff in enemy.buffsAndDebuffs:
+            buffdebuff.turns -= 1
     if player.alive:
+        player.buffsAndDebuffs.clear()
         player.add_exp(enemy.xpReward)
 
 def heal(target, amount):
@@ -58,11 +66,18 @@ def heal(target, amount):
         target.stats['hp'] = target.stats['maxHp']
     else:
         target.stats['hp'] += amount
+    print('{} heals {} hp!'.format(target.name, amount))
 
-def skill_effect(skill, attacker, defender):
+def skill_effect(skill, caster, target):
     if type(skill) == skills.SimpleOffensiveSpell:
-        dmg = skill.effect(attacker, defender)
-        take_dmg(attacker, defender, dmg)
+        amount = skill.effect(caster, target)
+        take_dmg(caster, target, amount)
+    elif type(skill) == skills.SimpleHealingSpell:
+        # TODO: Change for target when multi-character combat is ready
+        amount = skill.effect(caster, target)
+        heal(caster, amount)
+    elif type(skill) == skills.BuffDebuffSpell:
+        skill.effect(caster, caster)
 
 def fully_heal(target):
     target.stats['hp'] = target.stats['maxHp']

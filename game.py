@@ -46,9 +46,9 @@ def play():
         text.play_menu()
         option = int(input("> "))
         if option == 1:
-            randomChosenEnemy = random.randint(1, 2)
+            randomChosenEnemy = random.randint(1, 1)
             if randomChosenEnemy == 1:
-                enemy = enemies.Imp()
+                enemy = enemies.GiantSlime()
             elif randomChosenEnemy == 2:
                 enemy = enemies.Golem()
             combat.combat(myPlayer, enemy)

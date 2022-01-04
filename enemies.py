@@ -31,3 +31,18 @@ class Golem(combat.Enemy):
         }
         xpReward = 14
         super().__init__('Golem', stats, xpReward)
+
+class GiantSlime(combat.Enemy):
+    def __init__(self) -> None:
+        stats = {'maxHp' : 200,
+                    'hp' : 200,
+                    'maxMp' : 10,
+                    'mp' : 10,
+                    'atk' : 3,
+                    'def' : 1,
+                    'matk' : 10,
+                    'mdef' : 10,
+                    'speed' : 10,
+                    'critCh' : 0
+        }
+        super().__init__('Giant Slime', stats, 20)
