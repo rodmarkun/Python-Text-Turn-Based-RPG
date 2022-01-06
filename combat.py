@@ -1,3 +1,4 @@
+import math
 import random
 import skills
 import text
@@ -8,6 +9,7 @@ class Battler():
         self.stats = stats
         self.alive = True
         self.buffsAndDebuffs = []
+        self.isAlly = False
 
 class Enemy(Battler):
 
@@ -21,7 +23,8 @@ def normal_attack(attacker, defender):
     if attacker.stats['critCh'] > random.randint(0, 100):
         print('Critical blow!')
         dmg *= 2
-    take_dmg(attacker, defender, dmg)
+    if not check_miss(attacker, defender):
+        take_dmg(attacker, defender, dmg)
 
 def take_dmg(attacker, defender, dmg):
     if dmg < 0: dmg = 0
@@ -31,26 +34,38 @@ def take_dmg(attacker, defender, dmg):
         print('{} has been slain.'.format(defender.name))
         defender.alive = False
 
-def combat(player, enemy):
+def combat(player, enemies):
+    battlers = enemies.copy()
+    battlers.append(player)
+    battlers.sort(key=lambda b: b.stats['speed'], reverse=True)
     print('############################')
-    print('A wild {} has appeared!'.format(enemy.name))
-    while player.alive and enemy.alive:
-        text.combat_menu(player, enemy)
-        cmd = input('> ').lower()
-        while cmd not in ['a', 'c', 's']:
-            cmd = input('> ').lower()
-        if 'a' in cmd:
-            normal_attack(player, enemy)
-            if enemy.alive == True:
-                normal_attack(enemy, player)
-        elif 's' in cmd:
-            # TODO: This needs more control
-            text.spell_menu(player)
-            option = int(input("> "))
-            if option != 0:
-                skill_effect(player.spells[option - 1], player, enemy)
-                if enemy.alive == True:
-                    normal_attack(enemy, player)
+    for enemy in enemies:
+        print('A wild {} has appeared!'.format(enemy.name))
+    while player.alive and len(enemies) > 0:
+        for battler in battlers:
+            if battler.isAlly:
+                text.combat_menu(player, enemies)
+                cmd = input('> ').lower()
+                while cmd not in ['a', 'c', 's']:
+                    cmd = input('> ').lower()
+                if 'a' in cmd:
+                    targeted_enemy = select_target(enemies)
+                    normal_attack(player, targeted_enemy)
+                    if targeted_enemy.alive == False:
+                        battlers.remove(enemy)
+                        enemies.remove(enemy)
+                elif 's' in cmd:
+                    # TODO: This needs more control
+                    text.spell_menu(player)
+                    option = int(input("> "))
+                    if option != 0:
+                        targeted_enemy = select_target(battlers)
+                        skill_effect(player.spells[option - 1], player, targeted_enemy)
+                        if targeted_enemy.alive == False:
+                            battlers.remove(enemy)
+                            enemies.remove(enemy)
+            else:
+                normal_attack(battler, player)
 
         # A turn has passed
         for bd in player.buffsAndDebuffs:
@@ -61,6 +76,21 @@ def combat(player, enemy):
         for bd in player.buffsAndDebuffs:
             bd.deactivate()
         player.add_exp(enemy.xpReward)
+
+def select_target(targets):
+    text.select_objective(targets)
+    i = int(input("> "))
+    if i <= len(targets):
+        target = targets[i-1]
+        return target
+
+# Returns True if attack misses, false if it doesn't
+def check_miss(attacker, defender):
+    chance = math.floor(math.sqrt(max(0, (5 * defender.stats['speed'] - attacker.stats['speed'] * 2))))
+    if chance > random.randint(0, 100):
+        print('{}\'s attack missed!'.format(attacker.name))
+        return True
+    return False
 
 def recover_mp(target, amount):
     if target.stats['mp'] + amount > target.stats['maxMp']:

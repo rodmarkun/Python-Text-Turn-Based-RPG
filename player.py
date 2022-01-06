@@ -36,6 +36,7 @@ class Player(combat.Battler):
         self.money = 0
         self.combos = []
         self.spells = [skills.fireball, skills.divineBlessing, skills.benettFantasticVoyage]
+        self.isAlly = True
     
     def equip_item(self, equipment):
         if equipment != None:

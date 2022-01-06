@@ -110,7 +110,7 @@ class Item():
         if self.amount >= 1:
             print('How many do you want to sell?')
             amountToSell = int(input("> "))
-            if amountToSell <= self.amount:
+            if amountToSell <= self.amount and amountToSell > 0:
                 moneyToReceive = self.individual_value * amountToSell
                 print('Are you sure you want to sell {} {} for {}? [y/n]'.format(amountToSell, 
                     self.name, moneyToReceive))

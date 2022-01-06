@@ -53,12 +53,15 @@ def play():
         text.play_menu()
         option = int(input("> "))
         if option == 1:
-            randomChosenEnemy = random.randint(1, 2)
-            if randomChosenEnemy == 1:
-                enemy = enemies.Imp()
-            elif randomChosenEnemy == 2:
-                enemy = enemies.Golem()
-            combat.combat(myPlayer, enemy)
+            # randomChosenEnemy = random.randint(1, 2)
+            # if randomChosenEnemy == 1:
+            #     enemy = enemies.Imp()
+            # elif randomChosenEnemy == 2:
+            #     enemy = enemies.Golem()
+            enemy1 = enemies.Imp()
+            enemy2 = enemies.Imp()
+            battleEnemies = [enemy1, enemy2]
+            combat.combat(myPlayer, battleEnemies)
         elif option == 2:
             text.showStats(myPlayer)
         elif option == 3:

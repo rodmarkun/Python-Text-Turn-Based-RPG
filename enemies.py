@@ -10,7 +10,7 @@ class Imp(combat.Enemy):
                     'def' : 6,
                     'matk' : 10,
                     'mdef' : 10,
-                    'speed' : 10,
+                    'speed' : 9,
                     'critCh' : 5
         }
         xpReward = 7

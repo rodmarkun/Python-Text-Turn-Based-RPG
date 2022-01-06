@@ -71,11 +71,12 @@ def inventory_menu():
     print('#        Q - Quit          #')
     print('############################')
 
-def combat_menu(player, enemy):
+def combat_menu(player, enemies):
     print('############################')
     print('{} - HP: {}/{} - MP: {}/{}'.format(player.name, player.stats['hp'], player.stats['maxHp'],
                                                 player.stats['mp'], player.stats['maxMp']))
-    print('{} - HP: {}/{}'.format(enemy.name, enemy.stats['hp'], enemy.stats['maxHp']))
+    for enemy in enemies:
+        print('{} - HP: {}/{}'.format(enemy.name, enemy.stats['hp'], enemy.stats['maxHp']))
     print('############################')
     print('#       A - Attack         #')
     print('#       C - Combos         #')
@@ -90,3 +91,13 @@ def spell_menu(player):
     for s in player.spells:
             print(str('{} - {}'.format(index, s.name)))
             index += 1
+
+def select_objective(targets):
+    print('############################')
+    print('    Select an objective:    ')
+    print('############################')
+    index = 1
+    for t in targets:
+        print('{} - {} - HP: {}/{}'.format(index, t.name, t.stats['hp'], t.stats['maxHp']))
+        index += 1
+    print('############################')
