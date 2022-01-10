@@ -1,3 +1,6 @@
+'''
+Skill is the parent class for Spells(matk) and Combos (atk)
+'''
 class Skill():
     def __init__(self, name, description, power, mpCost) -> None:
         self.name = name
@@ -13,6 +16,8 @@ class Skill():
             print('{} casts {}!'.format(caster.name, self.name))
             caster.stats['mp'] -= self.mpCost
             return True
+
+##### SPELLS #####
 
 class SimpleOffensiveSpell(Skill):
     def __init__(self, name, description, power, mpCost) -> None:
@@ -53,6 +58,8 @@ class BuffDebuffSpell(Skill):
                 return True
         return False
 
+##### MISC #####
+
 class BuffDebuff():
     def __init__(self, name, target, statToChange, amountToChange, turns) -> None:
         self.name = name
@@ -82,6 +89,8 @@ class BuffDebuff():
         print('The effect of {} has ended'.format(self.name))
         self.target.buffsAndDebuffs.remove(self)
         self.target.stats[self.statToChange] -= self.difference
+
+##### SPELL INSTANCES #####
 
 fireball = SimpleOffensiveSpell('Fireball', '', 15, 3)
 divineBlessing = SimpleHealingSpell('Divine Blessing', '', 8, 4)

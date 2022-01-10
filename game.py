@@ -22,6 +22,7 @@ def title_screen_selections():
         print("Please enter a valid command")
         option = int(input("> "))
 
+##### Inventory menu #####
 def inventory_selections(player):
     option = input("> ")
     while option.lower() != 'q':
@@ -37,6 +38,7 @@ def inventory_selections(player):
             pass
         option = input("> ")
 
+##### Initializing function #####
 def play():
     myPlayer = player.Player("Test Player")
 
@@ -59,7 +61,7 @@ def play():
             # elif randomChosenEnemy == 2:
             #     enemy = enemies.Golem()
             enemy1 = enemies.Imp()
-            enemy2 = enemies.Imp()
+            enemy2 = enemies.Golem()
             battleEnemies = [enemy1, enemy2]
             combat.combat(myPlayer, battleEnemies)
         elif option == 2:

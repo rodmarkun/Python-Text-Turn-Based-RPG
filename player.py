@@ -22,22 +22,31 @@ class Player(combat.Battler):
 
         self.lvl = 1
         self.xp = 0
-        self.xpToNextLvl = 25
+        self.xpToNextLvl = 25 # Amount of xp to reach next lvl is multiplied by 1.5 per level
         self.aptitudes = {'str' : 5,
                     'dex' : 5,
                     'int' : 5,
                     'wis' : 5,
                     'const' : 5
         }
-        self.aptitudePoints = 0
+        '''
+        When an aptitude is leveled up, certain stats also increase:
+        STR -> ATK + 1
+        DEX -> SPD + 1, CRIT + 1
+        INT -> MATK + 1
+        WIS -> MP + 5
+        CONST -> MAXHP + 5
+        '''
+        self.aptitudePoints = 0 # Points for upgrading aptitudes
         self.inventory = inventory.Inventory()
         self.equipment = {'Weapon' : None,
-                            'Armor' : None}
+                            'Armor' : None} # Player's equipment, can be further expanded
         self.money = 0
-        self.combos = []
-        self.spells = [skills.fireball, skills.divineBlessing, skills.benettFantasticVoyage]
+        self.combos = [] # Player's selection of combos (atk)
+        self.spells = [skills.fireball, skills.divineBlessing, skills.benettFantasticVoyage] # Player's selection of spells (matk)
         self.isAlly = True
     
+    # Equip an item (must be of type 'Equipment')
     def equip_item(self, equipment):
         if equipment != None:
             if type(equipment) == inventory.Equipment:
@@ -46,6 +55,8 @@ class Player(combat.Battler):
                     actualEquipment.add_to_inventory(self.inventory)
                     for stat in actualEquipment.statChangeList:
                         self.stats[stat] -= actualEquipment.statChangeList[stat]
+                for stat in equipment.statChangeList:
+                    self.stats[stat] += equipment.statChangeList[stat]
                 self.equipment[equipment.objectType] = equipment
                 print('{} has been equipped.'.format(equipment.name))
                 print(equipment.show_stats())
@@ -54,6 +65,7 @@ class Player(combat.Battler):
         text.inventory_menu()
         self.inventory.show_inventory()
 
+    # Use an item TODO: change to other types rather than 'Potion'
     def use_item(self, item):
         if item != None:
             if type(item) == inventory.Potion:
@@ -61,6 +73,7 @@ class Player(combat.Battler):
         text.inventory_menu()
         self.inventory.show_inventory()
 
+    # Add a certain amount of exp to player
     def add_exp(self, exp):
         self.xp += exp
         print("You earn {}xp".format(exp))
@@ -75,6 +88,7 @@ class Player(combat.Battler):
             self.stats['mp'] = self.stats['maxMp']
             print("Level up! You are now level {}. You have {} aptitude points".format(self.lvl, self.aptitudePoints))
 
+    # Loop for upgrading aptitudes with aptitude points
     def assign_aptitude_points(self):
         text.showAptitudes(self)
         option = int(input("> "))
@@ -98,6 +112,8 @@ class Player(combat.Battler):
             option = int(input("> "))
 
     '''
+    Updates stats when an aptitude is leveled up
+    
     When an aptitude is leveled up, certain stats also increase:
     STR -> ATK + 1
     DEX -> SPD + 1, CRIT + 1

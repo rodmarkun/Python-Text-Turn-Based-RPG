@@ -1,16 +1,20 @@
 import combat
-
+'''
+Manages player's inventory and items. Can be modified to have a certain capacity.
+'''
 class Inventory():
 
     def __init__(self) -> None:
         self.items = []
 
+    # Show all items in the inventory
     def show_inventory(self):
         index = 1
         for item in self.items:
             print(str('{} - {}'.format(index, item.show_info())))
             index += 1
 
+    # Drop an item from the inventory
     def drop_item(self):
         print('\nWhich item do you want to drop? ["0" to Quit]')
         self.show_inventory()
@@ -24,6 +28,7 @@ class Inventory():
                 self.items.pop(i - 1)
             self.show_inventory()
 
+    # Sell a certain item from inventory
     def sell_item(self):
         print('\nWhich item do you want to sell? ["0" to Quit]')
         self.show_inventory()
@@ -37,6 +42,7 @@ class Inventory():
                 self.items.pop(i - 1)
             return moneyForItem
 
+    # Equip a certain item from inventory (must be type 'Equipment')
     def equip_item(self):
         print('\nWhich item do you want to equip? ["0" to Quit]')
         self.show_inventory()
@@ -53,6 +59,7 @@ class Inventory():
                 print('Please choose an equipable object.')
                 return None
 
+    # Use a certain item of type 'Consumable'
     def use_item(self):
         print('\nWhich item do you want to use? ["0" to Quit]')
         self.show_inventory()
@@ -70,13 +77,6 @@ class Inventory():
             else:
                 print('Please choose a consumable object.')
                 return None
-
-    @property
-    def total_worth(self):
-        totalWorth = 0
-        for item in self.items:
-            totalWorth += item.amount * item.individual_value
-        print('Total inventory worth is: {}'.format(totalWorth))
             
 class Item():
 
@@ -86,10 +86,6 @@ class Item():
         self.amount = amount
         self.individual_value = individual_value
         self.objectType = objectType
-
-    @property
-    def total_worth(self):
-        return self.amount * self.individual_value
 
     def drop(self):
         if self.amount == 1:

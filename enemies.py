@@ -26,7 +26,7 @@ class Golem(combat.Enemy):
                     'def' : 9,
                     'matk' : 10,
                     'mdef' : 10,
-                    'speed' : 10,
+                    'speed' : 4,
                     'critCh' : 0
         }
         xpReward = 14
