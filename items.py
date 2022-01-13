@@ -2,7 +2,7 @@ import inventory
 
 # Basic Items
 # -> Basic Weapons
-longsword = inventory.Equipment('Longword', '', 1, 20, 'Weapon', {'atk' : 6})
+longsword = inventory.Equipment('Longsword', '', 1, 20, 'Weapon', {'atk' : 6})
 dagger = inventory.Equipment('Dagger', '', 1, 15, 'Weapon', {'atk' : 3, 'critCh' : 10, 'speed': 3})
 staff = inventory.Equipment('Staff', '', 1, 18, 'Weapon', {'matk' : 3, 'maxMp' : 2})
 # -> Basic Armor

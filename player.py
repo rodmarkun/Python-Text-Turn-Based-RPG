@@ -29,6 +29,7 @@ class Player(combat.Battler):
                     'wis' : 5,
                     'const' : 5
         }
+
         '''
         When an aptitude is leveled up, certain stats also increase:
         STR -> ATK + 1
@@ -37,6 +38,7 @@ class Player(combat.Battler):
         WIS -> MP + 5
         CONST -> MAXHP + 5
         '''
+
         self.aptitudePoints = 0 # Points for upgrading aptitudes
         self.inventory = inventory.Inventory()
         self.equipment = {'Weapon' : None,
@@ -48,35 +50,36 @@ class Player(combat.Battler):
     
     # Equip an item (must be of type 'Equipment')
     def equip_item(self, equipment):
-        if equipment != None:
-            if type(equipment) == inventory.Equipment:
-                actualEquipment = self.equipment[equipment.objectType]
-                if actualEquipment != None:
-                    actualEquipment.add_to_inventory(self.inventory)
-                    for stat in actualEquipment.statChangeList:
-                        self.stats[stat] -= actualEquipment.statChangeList[stat]
-                for stat in equipment.statChangeList:
-                    self.stats[stat] += equipment.statChangeList[stat]
-                self.equipment[equipment.objectType] = equipment
-                print('{} has been equipped.'.format(equipment.name))
-                print(equipment.show_stats())
-            else:
-                print('{} is not equipable.'.format(equipment.name))
+        if type(equipment) == inventory.Equipment:
+            actualEquipment = self.equipment[equipment.objectType]
+            if actualEquipment != None:
+                print('{} has been unequiped.'.format(actualEquipment.name))
+                actualEquipment.add_to_inventory(self.inventory)
+                for stat in actualEquipment.statChangeList:
+                    self.stats[stat] -= actualEquipment.statChangeList[stat]
+            for stat in equipment.statChangeList:
+                self.stats[stat] += equipment.statChangeList[stat]
+            self.equipment[equipment.objectType] = equipment
+            print('{} has been equipped.'.format(equipment.name))
+            print(equipment.show_stats())
+        else:
+            print('{} is not equipable.'.format(equipment.name))
         text.inventory_menu()
         self.inventory.show_inventory()
 
-    # Use an item TODO: change to other types rather than 'Potion'
+    # Use an item
     def use_item(self, item):
-        if item != None:
-            if type(item) == inventory.Potion:
-                item.activate(self)
+        usable_items = [inventory.Potion]
+        if type(item) in usable_items:
+            item.activate(self)
         text.inventory_menu()
         self.inventory.show_inventory()
 
-    # Add a certain amount of exp to player
+    # Adds a certain amount of exp to the player
     def add_exp(self, exp):
         self.xp += exp
         print("You earn {}xp".format(exp))
+        # Level up:
         while(self.xp >= self.xpToNextLvl):
             self.xp -= self.xpToNextLvl
             self.lvl += 1
@@ -85,8 +88,13 @@ class Player(combat.Battler):
                 self.stats[stat] += 1
             self.aptitudePoints += 1
             combat.fully_heal(self)
-            self.stats['mp'] = self.stats['maxMp']
+            combat.fully_recover_mp(self)
             print("Level up! You are now level {}. You have {} aptitude points".format(self.lvl, self.aptitudePoints))
+
+    # Adds a certain amount of money to the player
+    def add_money(self, money):
+        self.money += money
+        print("You earn {} coins")
 
     # Loop for upgrading aptitudes with aptitude points
     def assign_aptitude_points(self):
@@ -99,7 +107,7 @@ class Player(combat.Battler):
                             5 : 'const'}
         while option != 6:
             if option in range(1, 7):
-                if self.aptitudePoints >=1:
+                if self.aptitudePoints >= 1:
                     aptitudeToAssign = optionsDictionary[option]
                     self.aptitudes[aptitudeToAssign] += 1
                     print('{} is now {}!'.format(aptitudeToAssign, self.aptitudes[aptitudeToAssign]))

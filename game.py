@@ -11,7 +11,10 @@ import combat, enemies, text, player, inventory, items
 ##### Title Screen #####
 def title_screen_selections():
     text.title_screen()
-    option = int(input("> "))
+    try:
+        option = int(input("> "))
+    except:
+        print("Please enter a number")
     if option == 1:
         play()
     elif option == 2:
@@ -40,8 +43,10 @@ def inventory_selections(player):
 
 ##### Initializing function #####
 def play():
+    # Player instantiation
     myPlayer = player.Player("Test Player")
 
+    # Adding some testing items
     items.hpPotions.add_to_inventory(myPlayer.inventory)
     items.mpPotions.add_to_inventory(myPlayer.inventory)
     items.longsword.add_to_inventory(myPlayer.inventory)
@@ -53,13 +58,19 @@ def play():
 
     while myPlayer.alive:
         text.play_menu()
-        option = int(input("> "))
+        try:
+            option = int(input("> "))
+        except:
+            print('Unvalid command')
         if option == 1:
             # randomChosenEnemy = random.randint(1, 2)
             # if randomChosenEnemy == 1:
             #     enemy = enemies.Imp()
             # elif randomChosenEnemy == 2:
             #     enemy = enemies.Golem()
+
+            # TODO: Combat randomization
+
             enemy1 = enemies.Imp()
             enemy2 = enemies.Golem()
             battleEnemies = [enemy1, enemy2]
@@ -75,7 +86,7 @@ def play():
         elif option == 5:
             combat.fully_heal(myPlayer)
         else:
-            pass
+            option = int(input("> "))
 
 if __name__ == "__main__":
     title_screen_selections()

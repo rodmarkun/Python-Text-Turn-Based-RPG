@@ -1,12 +1,13 @@
 '''
-Skill is the parent class for Spells(matk) and Combos (atk)
+Skill is the parent class for Spells(matk) and Combos(atk)
 '''
 class Skill():
-    def __init__(self, name, description, power, mpCost) -> None:
+    def __init__(self, name, description, power, mpCost, isTargeted) -> None:
         self.name = name
         self.description = description
         self.power = power
         self.mpCost = mpCost
+        self.isTargeted = isTargeted
     
     def check_mp(self, caster):
         if caster.stats['mp'] < self.mpCost:
@@ -19,29 +20,27 @@ class Skill():
 
 ##### SPELLS #####
 
-class SimpleOffensiveSpell(Skill):
-    def __init__(self, name, description, power, mpCost) -> None:
-        super().__init__(name, description, power, mpCost)
+class DamageSpell(Skill):
+    def __init__(self, name, description, power, mpCost, isTargeted) -> None:
+        super().__init__(name, description, power, mpCost, isTargeted)
 
     def effect(self, caster, target):
         if self.check_mp(caster):
             dmg = self.power + (caster.stats['matk'] - target.stats['mdef'])
-            return dmg
-        return 0
+        target.take_dmg(dmg)
 
-class SimpleHealingSpell(Skill):
-    def __init__(self, name, description, power, mpCost) -> None:
-        super().__init__(name, description, power, mpCost)
+class HealingSpell(Skill):
+    def __init__(self, name, description, power, mpCost, isTargeted) -> None:
+        super().__init__(name, description, power, mpCost, isTargeted)
     
     def effect(self, caster, target):
         if self.check_mp(caster):
             amountToHeal = self.power + round(caster.stats['matk']/2)
-            return amountToHeal
-        return 0
+        target.heal(amountToHeal)
 
 class BuffDebuffSpell(Skill):
-    def __init__(self, name, description, power, mpCost, statToChange, amountToChange, turns) -> None:
-        super().__init__(name, description, power, mpCost)
+    def __init__(self, name, description, power, mpCost, isTargeted, statToChange, amountToChange, turns) -> None:
+        super().__init__(name, description, power, mpCost, isTargeted)
         self.statToChange = statToChange
         self.amountToChange = amountToChange
         self.turns = turns
@@ -92,6 +91,6 @@ class BuffDebuff():
 
 ##### SPELL INSTANCES #####
 
-fireball = SimpleOffensiveSpell('Fireball', '', 15, 3)
-divineBlessing = SimpleHealingSpell('Divine Blessing', '', 8, 4)
-benettFantasticVoyage = BuffDebuffSpell('Bennett\'s Fantastic Voyage', '', 0, 5, 'atk', 0.5, 3)
+fireball = DamageSpell('Fireball', '', 15, 3, True)
+divineBlessing = HealingSpell('Divine Blessing', '', 8, 4, True)
+benettFantasticVoyage = BuffDebuffSpell('Bennett\'s Fantastic Voyage', '', 0, 5, False, 'atk', 0.5, 3)
