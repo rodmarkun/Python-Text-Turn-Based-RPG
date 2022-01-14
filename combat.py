@@ -70,10 +70,14 @@ Main combat loop
 def combat(player, enemies):
     # All battlers are inserted into the Battlers list and ordered by speed (turn order)
     battlers = define_battlers(player, enemies)
+    enemy_exp = 0 
+    enemy_money = 0
 
     print('############################')
     for enemy in enemies:
         print('A wild {} has appeared!'.format(enemy.name))
+        enemy_exp += enemy.xpReward
+        enemy_money += enemy.goldReward
     # The battle will go on while the player is still alive and there are still enemies to defeat
     while player.alive and len(enemies) > 0:
         # Battlers should be updated for speed changes (buffs/debuffs)
@@ -117,7 +121,8 @@ def combat(player, enemies):
         # Deactivate all existent buffs and debuffs
         check_turns_buffs_and_debuffs(player, True)
         # Add experience to players
-        player.add_exp(enemy.xpReward)
+        player.add_exp(enemy_exp)
+        player.add_money(enemy_money)
 
 # Returns the battlers list, ordered by speed (turn order)
 # This should be changed to when the change from "player" to "allies" is made.
@@ -172,3 +177,32 @@ def fully_heal(target):
 
 def fully_recover_mp(target):
     target.stats['mp'] = target.stats['maxMp']
+
+def create_enemy_group(lvl):
+    from enemies import possible_enemies
+    enemies_to_appear = []
+    for enemy in possible_enemies:
+        lowlvl, highlvl = possible_enemies[enemy]
+        if lowlvl <= lvl <= highlvl:
+            enemies_to_appear.append(enemy)
+    
+    # Dictionary for quantity of enemies to battle.
+    # If lvl < 5 -> up to 2 enemies
+    # If lvl < 10 -> up to 3 enemies
+    # ...
+    enemy_quantity_for_level = {5 : 2, 
+                                10 : 3, 
+                                100 : 4}
+    
+    max_enemies = 1
+    for max_level in enemy_quantity_for_level:
+        if lvl < max_level:
+            max_enemies = enemy_quantity_for_level[max_level]
+            break
+
+    enemy_group = []
+    # Select x enemies, being x a random number between 1 and max_enemies
+    for i in range(random.randint(1, max_enemies)):
+        enemy_instance = random.choice(enemies_to_appear)()
+        enemy_group.append(enemy_instance)
+    return enemy_group

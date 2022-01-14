@@ -63,17 +63,7 @@ def play():
         except:
             print('Unvalid command')
         if option == 1:
-            # randomChosenEnemy = random.randint(1, 2)
-            # if randomChosenEnemy == 1:
-            #     enemy = enemies.Imp()
-            # elif randomChosenEnemy == 2:
-            #     enemy = enemies.Golem()
-
-            # TODO: Combat randomization
-
-            enemy1 = enemies.Imp()
-            enemy2 = enemies.Golem()
-            battleEnemies = [enemy1, enemy2]
+            battleEnemies = combat.create_enemy_group(myPlayer.lvl)
             combat.combat(myPlayer, battleEnemies)
         elif option == 2:
             text.showStats(myPlayer)

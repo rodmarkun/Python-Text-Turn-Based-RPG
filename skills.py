@@ -34,6 +34,7 @@ class HealingSpell(Skill):
         super().__init__(name, description, power, mpCost, isTargeted)
     
     def effect(self, caster, target):
+        amountToHeal = 0
         if self.check_mp(caster):
             amountToHeal = self.power + round(caster.stats['matk']/2)
         target.heal(amountToHeal)

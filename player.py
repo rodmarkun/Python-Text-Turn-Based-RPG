@@ -94,7 +94,7 @@ class Player(combat.Battler):
     # Adds a certain amount of money to the player
     def add_money(self, money):
         self.money += money
-        print("You earn {} coins")
+        print("You earn {} coins".format(money))
 
     # Loop for upgrading aptitudes with aptitude points
     def assign_aptitude_points(self):

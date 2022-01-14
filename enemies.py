@@ -14,7 +14,6 @@ class Imp(combat.Enemy):
                     'speed' : 9,
                     'critCh' : 5
         }
-        xpReward = 7
         super().__init__('Imp', stats, xpReward=8, goldReward=randint(1, 6))
 
 class Golem(combat.Enemy):
@@ -46,3 +45,7 @@ class GiantSlime(combat.Enemy):
                     'critCh' : 0
         }
         super().__init__('Giant Slime', stats, xpReward=30, goldReward=randint(3, 15))
+
+possible_enemies = {Imp : (1, 3),
+                    Golem : (2, 4),
+                    GiantSlime : (3, 6)}

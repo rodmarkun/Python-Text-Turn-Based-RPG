@@ -173,6 +173,6 @@ class Potion(Item):
     def activate(self, caster):
         print('{} uses a {}!'.format(caster.name, self.name))
         if self.stat == 'hp':
-            combat.heal(caster, self.amountToChange)
+            caster.heal(self.amountToChange)
         elif self.stat == 'mp':
-            combat.recover_mp(caster, self.amountToChange)
+            caster.recover_mp(self.amountToChange)
