@@ -98,15 +98,15 @@ class Player(combat.Battler):
 
     # Loop for upgrading aptitudes with aptitude points
     def assign_aptitude_points(self):
+        optionsDictionary = {'1' : 'str',
+                            '2' : 'dex',
+                            '3' : 'int',
+                            '4' : 'wis',
+                            '5' : 'const'}
         text.showAptitudes(self)
-        option = int(input("> "))
-        optionsDictionary = {1 : 'str',
-                            2 : 'dex',
-                            3 : 'int',
-                            4 : 'wis',
-                            5 : 'const'}
-        while option != 6:
-            if option in range(1, 7):
+        option = input("> ")
+        while option.lower() != 'q':
+            try:
                 if self.aptitudePoints >= 1:
                     aptitudeToAssign = optionsDictionary[option]
                     self.aptitudes[aptitudeToAssign] += 1
@@ -115,9 +115,10 @@ class Player(combat.Battler):
                     self.aptitudePoints -= 1
                 else:
                     print('Not enough points!')
-            else:
-                print('Not a valid character!')
-            option = int(input("> "))
+            except:
+                print('Please enter a valid number')
+            option = input("> ")
+
 
     '''
     Updates stats when an aptitude is leveled up

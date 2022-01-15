@@ -48,4 +48,4 @@ class GiantSlime(combat.Enemy):
 
 possible_enemies = {Imp : (1, 3),
                     Golem : (2, 4),
-                    GiantSlime : (3, 6)}
+                    GiantSlime : (3, 100)}

@@ -135,10 +135,21 @@ def define_battlers(player, enemies):
 # Select a certain target from the battlefield
 def select_target(targets):
     text.select_objective(targets)
-    i = int(input("> "))
-    while i not in range(len(targets)+1):
-        print('Select a valid target')
-        i = int(input("> "))
+    valid_target = False
+    while not valid_target:
+        valid_int = False
+        while not valid_int:
+            i = input("> ")
+            try:
+                i = int(i)
+                valid_int = True
+            except:
+                print('Please enter a number')
+        if i not in range(len(targets)+1):
+            print('Select a valid target')
+            valid_target = False
+        else:
+            valid_target = True
     target = targets[i-1]
     return target
 

@@ -59,7 +59,7 @@ def showAptitudes(player):
     print('3 - INT (Current: {})'.format(player.aptitudes['int']))
     print('4 - WIS (Current: {})'.format(player.aptitudes['wis']))
     print('5 - CONST (Current: {})'.format(player.aptitudes['const']))
-    print('6 - Quit menu')
+    print('Q - Quit menu')
     print('############################')
 
 def inventory_menu():
