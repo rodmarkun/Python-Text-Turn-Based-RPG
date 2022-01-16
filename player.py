@@ -29,7 +29,6 @@ class Player(combat.Battler):
                     'wis' : 5,
                     'const' : 5
         }
-
         '''
         When an aptitude is leveled up, certain stats also increase:
         STR -> ATK + 1
@@ -44,7 +43,7 @@ class Player(combat.Battler):
         self.equipment = {'Weapon' : None,
                             'Armor' : None} # Player's equipment, can be further expanded
         self.money = 0
-        self.combos = [] # Player's selection of combos (atk)
+        self.combos = [skills.slashCombo1, skills.armorBreaker1, skills.vampireStab1] # Player's selection of combos (atk)
         self.spells = [skills.fireball, skills.divineBlessing, skills.benettFantasticVoyage] # Player's selection of spells (matk)
         self.isAlly = True
     

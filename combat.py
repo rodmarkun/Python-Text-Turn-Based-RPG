@@ -15,6 +15,7 @@ class Battler():
         self.alive = True
         self.buffsAndDebuffs = []
         self.isAlly = False
+        self.comboPoints = 0
 
     # Taking damage from a certain source
     def take_dmg(self, dmg):
@@ -37,6 +38,7 @@ class Battler():
         # Check for missed attack
         if not check_miss(self, defender):
             defender.take_dmg(dmg)
+        return dmg
 
     # Target recovers a certain amount of mp
     def recover_mp(self, amount):
@@ -53,6 +55,10 @@ class Battler():
         else:
             self.stats['hp'] += amount
         print('{} heals {} hp!'.format(self.name, amount))
+    
+    # Adds a certain amount of combo points
+    def addComboPoints(self, points):
+        self.comboPoints += points
 
 class Enemy(Battler):
     
@@ -93,9 +99,10 @@ def combat(player, enemies):
                 if 'a' in cmd:
                     targeted_enemy = select_target(enemies)
                     battler.normal_attack(targeted_enemy)
+                    battler.addComboPoints(1)
                     check_if_dead(targeted_enemy, enemies, battlers)
                 elif 's' in cmd:
-                    text.spell_menu(player)
+                    text.spell_menu(battler)
                     option = int(input("> "))
                     while option not in range(len(player.spells)+1):
                         print('Please enter a valid number')
@@ -108,6 +115,20 @@ def combat(player, enemies):
                             check_if_dead(target, enemies, battlers)
                         else:
                             spellChosen.effect(player, player)
+                elif 'c' in cmd:
+                    text.combo_menu(battler)
+                    option = int(input("> "))
+                    while option not in range(len(player.combos)+1):
+                        print('Please enter a valid number')
+                        option = int(input("> "))
+                    if option != 0:
+                        comboChosen = player.combos[option - 1]
+                        if comboChosen.isTargeted:
+                            target = select_target(battlers)
+                            comboChosen.effect(player, target)
+                            check_if_dead(target, enemies, battlers)
+                        else:
+                            comboChosen.effect(player, player)
             else:
                 # For now, enemies will perform a normal attack against the player.
                 # This can be expanded to work as a functional AI
@@ -123,6 +144,8 @@ def combat(player, enemies):
         # Add experience to players
         player.add_exp(enemy_exp)
         player.add_money(enemy_money)
+        # Restart Combo Points
+        player.comboPoints = 0
 
 # Returns the battlers list, ordered by speed (turn order)
 # This should be changed to when the change from "player" to "allies" is made.
