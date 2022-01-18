@@ -1,4 +1,3 @@
-import combat
 '''
 Manages player's inventory and items. Can be modified to have a certain capacity.
 '''

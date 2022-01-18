@@ -12,7 +12,7 @@ def help_menu():
 
 def play_menu():
     print('############################')   
-    print('#       1 - Battle         #')
+    print('#        1 - Walk          #')
     print('#      2 - See stats       #')
     print('#3 - Assign aptitude points#')
     print('#      4 - Inventory       #')
@@ -110,3 +110,49 @@ def select_objective(targets):
         print('{} - {} - HP: {}/{}'.format(index, t.name, t.stats['hp'], t.stats['maxHp']))
         index += 1
     print('############################')
+
+def shop_menu(player):
+    print('############################')
+    print('      SHOP - Money: {}      '.format(player.money))
+    print('############################')
+    print('       B - Buy Items        ')
+    print('       S - Sell Items       ')
+    print('         T - Talk           ')
+    print('         E - Exit           ')
+    print('############################')
+
+def enter_shop(name):
+    if name == 'Rik\'s Armor Shop':
+        print(rik_armor_shop_encounter)
+    elif name == 'Itz Magic':
+        print(itz_magic_encounter)
+    
+
+### Events' text
+
+## Shops
+
+# Rik's armor shop
+rik_armor_shop_encounter = 'Wandering around a small village, you find yourself in front of a shop.\n \
+There is a sign on the door. It says: <Rik\'s Armor Shop>. \n\
+Enter? [y/n]'
+rik_armor_shop_enter = '\"Hello there, friend! What do you need?\" a big and strong man asks.'
+rik_armor_shop_exit = 'You leave the village in search for more adventures.'
+
+#Itz Magic
+itz_magic_encounter = 'You stumble upon a swamp. Looking around, you find a small hut.\n\
+There is a sign on the door. It says <Itz\'s Magic Shop>\n\
+Enter? [y/n]'
+itz_magic_enter = 'Inside is a short woman with big glasses. She seems to be a witch. \n\
+She whispers:\"Well, well, what do we have here?... Come, take a look!\"'
+itz_magic_exit = 'You leave the swamp, continuing your journey.'
+
+## Healing
+
+# Medussa Statue
+medussa_statue_encounter = 'On the top of a hill, you find what seems to be a small shrine. \n\
+There is a statue of a goddess forgotten long ago. \n\
+Not knowing exactly why, you feel the urge to pay respects. \n\
+You kneel before it.'
+medussa_statue_success = 'You feel a pleasant warmth inside you.'
+medussa_statue_fail = 'Nothing happens. It is probably just your imagination.'

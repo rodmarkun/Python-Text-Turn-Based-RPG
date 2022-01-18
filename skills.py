@@ -1,10 +1,6 @@
 '''
 Skill is the parent class for Spells(matk) and Combos(atk)
 '''
-from os import times
-from typing import cast
-
-
 class Skill():
     def __init__(self, name, description, cost, isTargeted) -> None:
         self.name = name
@@ -20,6 +16,12 @@ class Skill():
                 return True
         return False
 
+'''
+Spells consume mp (Magic Points), which are restored by leveling up, using items,
+events... They also increment when upgrading the WIS (Wisdom) aptitude or equipping
+certain items. They use matk (Magic Attack) and their own power to calculate the
+damage done.
+'''
 class Spell(Skill):
     def __init__(self, name, description, power, cost, isTargeted) -> None:
         super().__init__(name, description, cost, isTargeted)
@@ -34,6 +36,12 @@ class Spell(Skill):
             caster.stats['mp'] -= self.cost
             return True
 
+'''
+Combos consume cp (Combo Points), which counter is by default set to 0 when a battle
+starts and increment as the Battler performs normal attacks. They can also increment
+by using certain Skills. They usually have special effects and integrates normal
+attacks within them.
+'''
 class Combo(Skill):
     def __init__(self, name, description, cost, isTargeted) -> None:
         super().__init__(name, description, cost, isTargeted)
@@ -160,4 +168,4 @@ benettFantasticVoyage = BuffDebuffSpell('Bennett\'s Fantastic Voyage', '', 0, 5,
 
 slashCombo1 = SlashCombo('Slash Combo I', '', 3, True, 3)
 armorBreaker1 = ArmorBreakingCombo('Armor Break I', '', 2, True, -0.3)
-vampireStab1 = VampirismCombo('Vampire Stab', '', 2, True, 0.5)
+vampireStab1 = VampirismCombo('Vampire Stab I', '', 2, True, 0.5)

@@ -20,8 +20,8 @@ class Player(combat.Battler):
 
         super().__init__(name, stats)
 
-        self.lvl = 1
-        self.xp = 0
+        self.lvl = 1 # Player Lvl
+        self.xp = 0 # Current xp
         self.xpToNextLvl = 25 # Amount of xp to reach next lvl is multiplied by 1.5 per level
         self.aptitudes = {'str' : 5,
                     'dex' : 5,
@@ -39,13 +39,13 @@ class Player(combat.Battler):
         '''
 
         self.aptitudePoints = 0 # Points for upgrading aptitudes
-        self.inventory = inventory.Inventory()
+        self.inventory = inventory.Inventory() # Player's inventory
         self.equipment = {'Weapon' : None,
                             'Armor' : None} # Player's equipment, can be further expanded
-        self.money = 0
-        self.combos = [skills.slashCombo1, skills.armorBreaker1, skills.vampireStab1] # Player's selection of combos (atk)
-        self.spells = [skills.fireball, skills.divineBlessing, skills.benettFantasticVoyage] # Player's selection of spells (matk)
-        self.isAlly = True
+        self.money = 0 # Current money
+        self.combos = [skills.slashCombo1, skills.armorBreaker1, skills.vampireStab1] # Player's selection of combos (atk, cp)
+        self.spells = [skills.fireball, skills.divineBlessing, skills.benettFantasticVoyage] # Player's selection of spells (matk, mp)
+        self.isAlly = True # Check if battler is an ally or not
     
     # Equip an item (must be of type 'Equipment')
     def equip_item(self, equipment):

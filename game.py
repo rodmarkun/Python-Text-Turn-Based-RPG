@@ -1,12 +1,9 @@
 # Python Text-Based RPG
 # Pablo Rodríguez Martín - @rodmarkun
 
-import cmd
-import textwrap
 import sys
-import os
 import random
-import combat, enemies, text, player, inventory, items
+import text, player, items, events
 
 ##### Title Screen #####
 def title_screen_selections():
@@ -49,8 +46,7 @@ def play():
         text.play_menu()
         option = input("> ")
         if option == '1':
-            battleEnemies = combat.create_enemy_group(myPlayer.lvl)
-            combat.combat(myPlayer, battleEnemies)
+            generate_event(myPlayer)
         elif option == '2':
             text.showStats(myPlayer)
         elif option == '3':
@@ -59,11 +55,6 @@ def play():
             text.inventory_menu()
             myPlayer.inventory.show_inventory()
             inventory_selections(myPlayer)
-        # Quick debug stuff
-        elif option == '5':
-            combat.fully_heal(myPlayer)
-        elif option == '6':
-            myPlayer.add_exp(99999)
         else:
             print("Please enter a valid command")
 
@@ -78,6 +69,17 @@ def debug_add_test_items(myPlayer):
     items.clothArmor.add_to_inventory(myPlayer.inventory)
     items.warhammer.add_to_inventory(myPlayer.inventory)
     items.ironArmor.add_to_inventory(myPlayer.inventory)
+
+def generate_event(myPlayer):
+    # Event chances (in %)
+    combat_chance = 60
+    shop_chance = 10
+    heal_chance = 30
+
+    eventList = random.choices(events.event_type_list, weights=(combat_chance, shop_chance, heal_chance), k=1)
+    # random.choices returns a list so we need to use eventList[0]
+    random.choice(eventList[0]).effect(myPlayer)
+
 
 if __name__ == "__main__":
     title_screen_selections()

@@ -96,11 +96,13 @@ def combat(player, enemies):
                 while cmd not in ['a', 'c', 's']:
                     print('Please enter a valid command')
                     cmd = input('> ').lower()
+                # Perform a normal attack
                 if 'a' in cmd:
                     targeted_enemy = select_target(enemies)
                     battler.normal_attack(targeted_enemy)
                     battler.addComboPoints(1)
                     check_if_dead(targeted_enemy, enemies, battlers)
+                # Cast a spell
                 elif 's' in cmd:
                     text.spell_menu(battler)
                     option = int(input("> "))
@@ -114,7 +116,9 @@ def combat(player, enemies):
                             spellChosen.effect(player, target)
                             check_if_dead(target, enemies, battlers)
                         else:
+                            # TODO: Change how non-targeted spells & combos work
                             spellChosen.effect(player, player)
+                # Use a combo
                 elif 'c' in cmd:
                     text.combo_menu(battler)
                     option = int(input("> "))
@@ -130,7 +134,7 @@ def combat(player, enemies):
                         else:
                             comboChosen.effect(player, player)
             else:
-                # For now, enemies will perform a normal attack against the player.
+                # For now, enemies will just perform a normal attack against the player.
                 # This can be expanded to work as a functional AI
                 battler.normal_attack(player)
 
@@ -148,7 +152,7 @@ def combat(player, enemies):
         player.comboPoints = 0
 
 # Returns the battlers list, ordered by speed (turn order)
-# This should be changed to when the change from "player" to "allies" is made.
+# This should be updated to when the change from "player" to "allies" is made.
 def define_battlers(player, enemies):
     battlers = enemies.copy()
     battlers.append(player)

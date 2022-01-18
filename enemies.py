@@ -46,6 +46,7 @@ class GiantSlime(combat.Enemy):
         }
         super().__init__('Giant Slime', stats, xpReward=30, goldReward=randint(3, 15))
 
+# Possible Enemy : (LowestPlayerLevelForAppearing, HighestPlayerLevelForAppearing)
 possible_enemies = {Imp : (1, 3),
                     Golem : (2, 4),
                     GiantSlime : (3, 100)}
