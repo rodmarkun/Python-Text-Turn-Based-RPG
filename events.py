@@ -1,6 +1,8 @@
 import combat
 import random
 import text
+import shops
+import items
 
 # Handles events (Enemy encounters, shops, healing places...)
 class Event():
@@ -36,8 +38,19 @@ class ShopEvent(Event):
             enter = input("> ").lower()
         if enter == 'y':
             print(self.enter)
+            vendor = shops.Shop(self.itemSet)
             text.shop_menu(player)
-            # Buy stuff
+            option = input ("> ").lower()
+            while option != 'e':
+                if option == 'b':
+                    player.buy_from_vendor(vendor)
+                elif option == 's':
+                    player.inventory.sell_item()
+                elif option == 't':
+                    # TODO: Talk
+                    pass
+                text.shop_menu(player)
+                option = input ("> ").lower()
         elif enter == 'n':
             print(self.exit)
         print(self.exit)
@@ -60,8 +73,8 @@ class HealingEvent(Event):
 
 # Event Instances
 random_combat = RandomCombatEvent('Random Combat')
-shop_rik_armor = ShopEvent('Rik\'s Armor Shop', text.rik_armor_shop_encounter, text.rik_armor_shop_enter, text.rik_armor_shop_exit, None)
-shop_itz_magic = ShopEvent('Itz Magic', text.itz_magic_encounter, text.itz_magic_enter, text.itz_magic_exit, None)
+shop_rik_armor = ShopEvent('Rik\'s Armor Shop', text.rik_armor_shop_encounter, text.rik_armor_shop_enter, text.rik_armor_shop_exit, items.rik_armor_shop_item_set)
+shop_itz_magic = ShopEvent('Itz Magic', text.itz_magic_encounter, text.itz_magic_enter, text.itz_magic_exit, items.itz_magic_item_set)
 heal_medussa_statue = HealingEvent('Medussa\'s Statue', text.medussa_statue_encounter, text.medussa_statue_success,
                                 text.medussa_statue_fail, 70, 50)
 

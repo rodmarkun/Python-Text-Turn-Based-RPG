@@ -40,7 +40,7 @@ def play():
     # Player instantiation
     myPlayer = player.Player("Test Player")
 
-    debug_add_test_items(myPlayer)
+    #debug_add_test_items(myPlayer)
 
     while myPlayer.alive:
         text.play_menu()
@@ -61,20 +61,21 @@ def play():
 # DEBUG
 def debug_add_test_items(myPlayer):
     # Adding some testing items
-    items.hpPotions.add_to_inventory(myPlayer.inventory)
-    items.mpPotions.add_to_inventory(myPlayer.inventory)
-    items.longsword.add_to_inventory(myPlayer.inventory)
-    items.dagger.add_to_inventory(myPlayer.inventory)
-    items.staff.add_to_inventory(myPlayer.inventory)
-    items.clothArmor.add_to_inventory(myPlayer.inventory)
-    items.warhammer.add_to_inventory(myPlayer.inventory)
-    items.ironArmor.add_to_inventory(myPlayer.inventory)
+    items.hpPotion.add_to_inventory(myPlayer.inventory)
+    items.mpPotion.add_to_inventory(myPlayer.inventory)
+    items.longsword.add_to_inventory_player(myPlayer.inventory)
+    items.longsword.add_to_inventory_player(myPlayer.inventory)
+    items.dagger.add_to_inventory_player(myPlayer.inventory)
+    items.staff.add_to_inventory_player(myPlayer.inventory)
+    items.clothArmor.add_to_inventory_player(myPlayer.inventory)
+    items.warhammer.add_to_inventory_player(myPlayer.inventory)
+    items.ironArmor.add_to_inventory_player(myPlayer.inventory)
 
 def generate_event(myPlayer):
     # Event chances (in %)
-    combat_chance = 60
-    shop_chance = 10
-    heal_chance = 30
+    combat_chance = 0
+    shop_chance = 100
+    heal_chance = 0
 
     eventList = random.choices(events.event_type_list, weights=(combat_chance, shop_chance, heal_chance), k=1)
     # random.choices returns a list so we need to use eventList[0]

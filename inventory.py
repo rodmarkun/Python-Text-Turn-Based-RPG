@@ -106,7 +106,8 @@ class Item():
             print('How many do you want to sell?')
             amountToSell = int(input("> "))
             if amountToSell <= self.amount and amountToSell > 0:
-                moneyToReceive = self.individual_value * amountToSell
+                # Items sell for 50% the value they are worth for
+                moneyToReceive = self.individual_value * 0.5 * amountToSell
                 print('Are you sure you want to sell {} {} for {}? [y/n]'.format(amountToSell, 
                     self.name, moneyToReceive))
                 confirmation = input("> ")
@@ -121,18 +122,41 @@ class Item():
                 print('You don\'t have that many {}!'.format(self.name))
         return 0
 
-    def add_to_inventory(self, inventory):
+    def buy(self, player):
+        if self.amount > 1:
+            print('How many do you want to buy?')
+            amountToBuy = int(input("> "))
+            price = self.individual_value * amountToBuy
+            if amountToBuy > self.amount:
+                print('The vendor does not have that many {}'.format(self.name))
+            elif price > player.money:
+                print('Not enough money!')
+            else:
+                itemForPlayer = Item(self.name, self.description, amountToBuy, self.individual_value, self.objectType)
+                self.amount -= amountToBuy
+                itemForPlayer.add_to_inventory_player(player.inventory)
+        elif self.amount == 1 and self.individual_value <= player.money:
+            itemForPlayer = Item(self.name, self.description, 1, self.individual_value, self.objectType)
+            itemForPlayer.add_to_inventory_player(player.inventory)
+            self.amount = 0
+
+    def add_to_inventory_player(self, inventory):
+        amountAdded = self.amount
+        self.add_to_inventory(inventory, amountAdded)
+        print('{} {} was added to your inventory!'.format(amountAdded, self.name))
+
+    def add_to_inventory(self, inventory, amount):
         alreadyInInventory = False
         for item in inventory.items:
             if self.name == item.name:
-                item.amount += self.amount
+                item.amount += amount
                 alreadyInInventory = True
         if not alreadyInInventory:
+            self.amount = amount
             inventory.items.append(self)
-        print('{} {} was added to your inventory!'.format(self.amount, self.name))
-    
+
     def show_info(self):
-        return '[x{}] {} ({})'.format(self.amount, self.name, self.objectType)
+        return '[x{}] {} ({}) - {}G'.format(self.amount, self.name, self.objectType, self.individual_value)
 
 '''
 Equipment shall be items but with an added dictionary statChangeList with stats to change
@@ -151,7 +175,7 @@ class Equipment(Item):
         self.statChangeList = statChangeList
     
     def show_info(self):
-        return '[x{}] {} ({}) {}'.format(self.amount, self.name, self.objectType, self.show_stats())
+        return '[x{}] {} ({}) {} - {}G'.format(self.amount, self.name, self.objectType, self.show_stats(), self.individual_value)
     
     def show_stats(self):
         statsString = '[ '

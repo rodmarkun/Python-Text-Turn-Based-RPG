@@ -15,5 +15,18 @@ warhammer = inventory.Equipment('Warhammer', '', 1, 62, 'Weapon', {'atk' : 13, '
 ironArmor = inventory.Equipment('Iron Armor', '', 1, 102, 'Armor', {'maxHp' : 8, 'def' : 10})
 
 # Consumables
-hpPotions = inventory.Potion('Health Potion', 'a', 4, 10, 'Consumable', 'hp', 15)
-mpPotions = inventory.Potion('Mana Potion', 'a', 4, 10, 'Consumable', 'mp', 15)
+hpPotion = inventory.Potion('Health Potion', 'a', 1, 10, 'Consumable', 'hp', 15)
+mpPotion = inventory.Potion('Mana Potion', 'a', 1, 10, 'Consumable', 'mp', 15)
+
+# Shop Item Sets
+
+rik_armor_shop_item_set = [ longsword, 
+                            dagger, 
+                            warhammer, 
+                            ironArmor ]
+
+itz_magic_item_set = [ staff,
+                        clothArmor,
+                        hpPotion,
+                        mpPotion,
+                        mpPotion ]

@@ -121,6 +121,12 @@ def shop_menu(player):
     print('         E - Exit           ')
     print('############################')
 
+def shop_buy(player):
+    print('############################')
+    print('      SHOP - Money: {}      '.format(player.money))
+    print('       ["0" to Quit]        ')
+    print('############################')
+
 def enter_shop(name):
     if name == 'Rik\'s Armor Shop':
         print(rik_armor_shop_encounter)

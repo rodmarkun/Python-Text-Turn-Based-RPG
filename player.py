@@ -42,7 +42,7 @@ class Player(combat.Battler):
         self.inventory = inventory.Inventory() # Player's inventory
         self.equipment = {'Weapon' : None,
                             'Armor' : None} # Player's equipment, can be further expanded
-        self.money = 0 # Current money
+        self.money = 999 # Current money
         self.combos = [skills.slashCombo1, skills.armorBreaker1, skills.vampireStab1] # Player's selection of combos (atk, cp)
         self.spells = [skills.fireball, skills.divineBlessing, skills.benettFantasticVoyage] # Player's selection of spells (matk, mp)
         self.isAlly = True # Check if battler is an ally or not
@@ -141,3 +141,16 @@ class Player(combat.Battler):
             self.stats['mp'] += 3
         elif aptitude == 'const':
             self.stats['maxHp'] += 3
+
+    def buy_from_vendor(self, vendor):
+        text.shop_buy(self)
+        vendor.inventory.show_inventory()
+        i = int(input("> "))
+        while i != 0:
+            if i <= len(vendor.inventory.items) and i > 0:
+                vendor.inventory.items[i-1].buy(self)
+                if vendor.inventory.items[i-1].amount <= 0:
+                    vendor.inventory.items.pop(i - 1)
+                vendor.inventory.show_inventory()
+                i = int(input("> "))
+            
