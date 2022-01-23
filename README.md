@@ -21,6 +21,8 @@ You can freely use this code in whatever project you're working on. As time move
 
 ![imagen](https://user-images.githubusercontent.com/75074498/148849953-4dbf9b97-8de2-4c2e-9115-faf52518ac10.png)
 
+![image](https://user-images.githubusercontent.com/75074498/150689319-bb36053e-ac22-4cf1-bb9d-b9aa9c76960b.png)
+
 
 ## Technologies
 - This project is made entirely in Python 3.9, using only default modules.
@@ -39,12 +41,21 @@ python game.py
 ```
 
 ## Features
-- Combat System
+- Advanced Combat System
 - Player Stat & Aptitude System
 - Player Inventory & Money System
-- Using, Dropping and Selling Items
+- Using & Dropping Items
+- Shops (Buying & Selling Items)
 - Equipment Customization
 - Enemy Customization
-- Skill Customization
+- Skill Customization (Spells & Combos)
+- Events (Random combats, Shops, Adventures...)
+
+## To-Do
+- Quest system
+- Multiple default events
+- Combos based on actual equipment
+- Multi-Allied combat
+
 ## Other useful info
 You can freely contact me on [Twitter](https://twitter.com/rodmarkun) or sending a mail to rodmarprogrammer@gmail.com
