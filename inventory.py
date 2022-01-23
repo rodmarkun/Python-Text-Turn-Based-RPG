@@ -126,7 +126,7 @@ class Item():
                     pass
             else:
                 print('You don\'t have that many {}!'.format(self.name))
-        return 0
+        return 0, 0
 
     def buy(self, player):
         if self.amount > 1:

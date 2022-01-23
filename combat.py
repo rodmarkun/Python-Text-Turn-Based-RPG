@@ -38,6 +38,8 @@ class Battler():
         # Check for missed attack
         if not check_miss(self, defender):
             defender.take_dmg(dmg)
+        else:
+            dmg = 0
         return dmg
 
     # Target recovers a certain amount of mp
@@ -116,8 +118,8 @@ def combat(player, enemies):
                             spellChosen.effect(player, target)
                             check_if_dead(target, enemies, battlers)
                         else:
-                            # TODO: Change how non-targeted spells & combos work
-                            spellChosen.effect(player, player)
+                            if spellChosen.defaultTarget == 'self':
+                                spellChosen.effect(player, player)
                 # Use a combo
                 elif 'c' in cmd:
                     text.combo_menu(battler)
@@ -132,7 +134,8 @@ def combat(player, enemies):
                             comboChosen.effect(player, target)
                             check_if_dead(target, enemies, battlers)
                         else:
-                            comboChosen.effect(player, player)
+                            if comboChosen.defaultTarget == 'self':
+                                comboChosen.effect(player, player)
             else:
                 # For now, enemies will just perform a normal attack against the player.
                 # This can be expanded to work as a functional AI

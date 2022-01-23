@@ -2,11 +2,12 @@
 Skill is the parent class for Spells(matk) and Combos(atk)
 '''
 class Skill():
-    def __init__(self, name, description, cost, isTargeted) -> None:
+    def __init__(self, name, description, cost, isTargeted, defaultTarget) -> None:
         self.name = name
         self.description = description
         self.cost = cost
         self.isTargeted = isTargeted
+        self.defaultTarget = defaultTarget
 
     def check_already_has_buff(self, target):
         for bd in target.buffsAndDebuffs:
@@ -23,8 +24,8 @@ certain items. They use matk (Magic Attack) and their own power to calculate the
 damage done.
 '''
 class Spell(Skill):
-    def __init__(self, name, description, power, cost, isTargeted) -> None:
-        super().__init__(name, description, cost, isTargeted)
+    def __init__(self, name, description, power, cost, isTargeted, defaultTarget) -> None:
+        super().__init__(name, description, cost, isTargeted, defaultTarget)
         self.power = power
 
     def check_mp(self, caster):
@@ -43,8 +44,8 @@ by using certain Skills. They usually have special effects and integrates normal
 attacks within them.
 '''
 class Combo(Skill):
-    def __init__(self, name, description, cost, isTargeted) -> None:
-        super().__init__(name, description, cost, isTargeted)
+    def __init__(self, name, description, cost, isTargeted, defaultTarget) -> None:
+        super().__init__(name, description, cost, isTargeted, defaultTarget)
     
     def check_cp(self, caster):
         if caster.comboPoints < self.cost:
@@ -58,27 +59,31 @@ class Combo(Skill):
 ##### SPELLS #####
 
 class DamageSpell(Spell):
-    def __init__(self, name, description, power, mpCost, isTargeted) -> None:
-        super().__init__(name, description, power, mpCost, isTargeted)
+    def __init__(self, name, description, power, mpCost, isTargeted, defaultTarget) -> None:
+        super().__init__(name, description, power, mpCost, isTargeted, defaultTarget)
 
     def effect(self, caster, target):
         if self.check_mp(caster):
             dmg = self.power + (caster.stats['matk'] - target.stats['mdef'])
         target.take_dmg(dmg)
 
-class HealingSpell(Spell):
-    def __init__(self, name, description, power, mpCost, isTargeted) -> None:
-        super().__init__(name, description, power, mpCost, isTargeted)
+class RecoverySpell(Spell):
+    def __init__(self, name, description, power, mpCost, stat, isTargeted, defaultTarget) -> None:
+        super().__init__(name, description, power, mpCost, isTargeted, defaultTarget)
+        self.stat = stat
     
     def effect(self, caster, target):
-        amountToHeal = 0
+        amountToRecover = 0
         if self.check_mp(caster):
-            amountToHeal = self.power + round(caster.stats['matk']/2)
-        target.heal(amountToHeal)
+            amountToRecover = self.power + round(caster.stats['matk']/2)
+        if self.stat == 'hp':
+            target.heal(amountToRecover)
+        elif self.stat == 'mp':
+            target.recover_mp(amountToRecover)
 
 class BuffDebuffSpell(Spell):
-    def __init__(self, name, description, power, mpCost, isTargeted, statToChange, amountToChange, turns) -> None:
-        super().__init__(name, description, power, mpCost, isTargeted)
+    def __init__(self, name, description, power, mpCost, isTargeted, defaultTarget, statToChange, amountToChange, turns) -> None:
+        super().__init__(name, description, power, mpCost, isTargeted, defaultTarget)
         self.statToChange = statToChange
         self.amountToChange = amountToChange
         self.turns = turns
@@ -91,8 +96,8 @@ class BuffDebuffSpell(Spell):
 ##### COMBOS #####
 
 class SlashCombo(Combo):
-    def __init__(self, name, description, comboCost, isTargeted, timesToHit) -> None:
-        super().__init__(name, description, comboCost, isTargeted)
+    def __init__(self, name, description, comboCost, isTargeted, defaultTarget, timesToHit) -> None:
+        super().__init__(name, description, comboCost, isTargeted, defaultTarget)
         self.timesToHit = timesToHit
 
     def effect(self, caster, target):
@@ -102,8 +107,8 @@ class SlashCombo(Combo):
                 caster.normal_attack(target)
 
 class ArmorBreakingCombo(Combo):
-    def __init__(self, name, description, cost, isTargeted, armorDestroyed) -> None:
-        super().__init__(name, description, cost, isTargeted)
+    def __init__(self, name, description, cost, isTargeted, defaultTarget, armorDestroyed) -> None:
+        super().__init__(name, description, cost, isTargeted, defaultTarget)
         self.armorDestroyed = armorDestroyed
     
     def effect(self, caster, target):
@@ -115,14 +120,27 @@ class ArmorBreakingCombo(Combo):
                 caster.normal_attack(target)
             
 class VampirismCombo(Combo):
-    def __init__(self, name, description, cost, isTargeted, percentHeal) -> None:
-        super().__init__(name, description, cost, isTargeted)
+    def __init__(self, name, description, cost, isTargeted, defaultTarget, percentHeal) -> None:
+        super().__init__(name, description, cost, isTargeted, defaultTarget)
         self.percentHeal = percentHeal
 
     def effect(self, caster, target):
         if self.check_cp(caster):
             amountToRecover = caster.normal_attack(target) * self.percentHeal
             caster.heal(round(amountToRecover))
+
+class RecoveryCombo(Combo):
+    def __init__(self, name, description, cost, stat, amountToChange, isTargeted, defaultTarget) -> None:
+        super().__init__(name, description, cost, isTargeted, defaultTarget)
+        self.stat = stat
+        self.amountToChange = amountToChange
+    
+    def effect(self, caster, target):
+        if self.check_cp(caster):
+            if self.stat == 'hp':
+                target.heal(self.amountToChange)
+            elif self.stat == 'mp':
+                target.recover_mp(self.amountToChange)
 
 ##### MISC #####
 
@@ -162,10 +180,11 @@ class BuffDebuff():
 
 ##### SPELL & COMBO INSTANCES #####
 
-fireball = DamageSpell('Fireball', '', 15, 3, True)
-divineBlessing = HealingSpell('Divine Blessing', '', 8, 4, True)
-benettFantasticVoyage = BuffDebuffSpell('Bennett\'s Fantastic Voyage', '', 0, 5, False, 'atk', 0.5, 3)
+fireball = DamageSpell('Fireball', '', 15, 3, True, None)
+divineBlessing = RecoverySpell('Divine Blessing', '', 8, 4, 'hp', True, None)
+enhanceWeapon = BuffDebuffSpell('Enhance Weapon', '', 0, 5, False, 'self', 'atk', 0.5, 3)
 
-slashCombo1 = SlashCombo('Slash Combo I', '', 3, True, 3)
-armorBreaker1 = ArmorBreakingCombo('Armor Break I', '', 2, True, -0.3)
-vampireStab1 = VampirismCombo('Vampire Stab I', '', 2, True, 0.5)
+slashCombo1 = SlashCombo('Slash Combo I', '', 3, True, None, 3)
+armorBreaker1 = ArmorBreakingCombo('Armor Break I', '', 2, True, None, -0.3)
+vampireStab1 = VampirismCombo('Vampire Stab I', '', 2, True, None, 0.5)
+meditation1 = RecoveryCombo('Meditation I', '', 1, 'mp', 5, False, 'self')

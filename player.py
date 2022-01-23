@@ -43,8 +43,12 @@ class Player(combat.Battler):
         self.equipment = {'Weapon' : None,
                             'Armor' : None} # Player's equipment, can be further expanded
         self.money = 20 # Current money
-        self.combos = [skills.slashCombo1, skills.armorBreaker1, skills.vampireStab1] # Player's selection of combos (atk, cp)
-        self.spells = [skills.fireball, skills.divineBlessing, skills.benettFantasticVoyage] # Player's selection of spells (matk, mp)
+        self.combos = [skills.slashCombo1, skills.armorBreaker1, skills.vampireStab1, skills.meditation1] # Player's selection of combos (atk, cp)
+        self.spells = [skills.fireball, skills.divineBlessing, skills.enhanceWeapon] # Player's selection of spells (matk, mp)
+
+        self.activeQuests = []
+        self.completedQuests = []
+        
         self.isAlly = True # Check if battler is an ally or not
     
     # Equip an item (must be of type 'Equipment')

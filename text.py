@@ -14,8 +14,9 @@ def play_menu():
     print('############################')   
     print('#        1 - Walk          #')
     print('#      2 - See stats       #')
-    print('#3 - Assign aptitude points#')
+    print('#      3 - Aptitudes       #')
     print('#      4 - Inventory       #')
+    print('#        5 - Quests        #')
     print('############################')
 
 def showStats(player):
