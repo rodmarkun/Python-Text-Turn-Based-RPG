@@ -65,7 +65,6 @@ def showAptitudes(player):
 def inventory_menu():
     print('############################')
     print('#    U - Use an item       #')
-    print('#    S - Sell an item      #')
     print('#    D - Drop an item      #')
     print('#    E - Equip an item     #')
     print('#        Q - Quit          #')
@@ -143,6 +142,7 @@ rik_armor_shop_encounter = 'Wandering around a small village, you find yourself 
 There is a sign on the door. It says: <Rik\'s Armor Shop>. \n\
 Enter? [y/n]'
 rik_armor_shop_enter = '\"Hello there, friend! What do you need?\" a big and strong man asks.'
+rik_armor_shop_talk = '' # Talk dialogue
 rik_armor_shop_exit = 'You leave the village in search for more adventures.'
 
 #Itz Magic
@@ -151,6 +151,7 @@ There is a sign on the door. It says <Itz\'s Magic Shop>\n\
 Enter? [y/n]'
 itz_magic_enter = 'Inside is a short woman with big glasses. She seems to be a witch. \n\
 She whispers:\"Well, well, what do we have here?... Come, take a look!\"'
+itz_magic_talk = '' # Talk dialogue
 itz_magic_exit = 'You leave the swamp, continuing your journey.'
 
 ## Healing
@@ -159,6 +160,7 @@ itz_magic_exit = 'You leave the swamp, continuing your journey.'
 medussa_statue_encounter = 'On the top of a hill, you find what seems to be a small shrine. \n\
 There is a statue of a goddess forgotten long ago. \n\
 Not knowing exactly why, you feel the urge to pay respects. \n\
-You kneel before it.'
+Kneel before it? [y/n]'
 medussa_statue_success = 'You feel a pleasant warmth inside you.'
-medussa_statue_fail = 'Nothing happens. It is probably just your imagination.'
+medussa_statue_fail = 'Nothing happens. It was probably just your imagination.'
+medussa_statue_refuse = 'You decide not to kneel.'

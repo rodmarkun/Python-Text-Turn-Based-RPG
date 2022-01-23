@@ -25,8 +25,6 @@ def inventory_selections(player):
     while option.lower() != 'q':
         if option.lower() == 'u':
             player.use_item(player.inventory.use_item())
-        elif option.lower() == 's':
-            player.money += player.inventory.sell_item()
         elif option.lower() == 'd':
             player.inventory.drop_item()
         elif option.lower() == 'e':
@@ -73,9 +71,9 @@ def debug_add_test_items(myPlayer):
 
 def generate_event(myPlayer):
     # Event chances (in %)
-    combat_chance = 0
-    shop_chance = 100
-    heal_chance = 0
+    combat_chance = 80
+    shop_chance = 10
+    heal_chance = 10
 
     eventList = random.choices(events.event_type_list, weights=(combat_chance, shop_chance, heal_chance), k=1)
     # random.choices returns a list so we need to use eventList[0]

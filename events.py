@@ -24,11 +24,12 @@ class RandomCombatEvent(Event):
         combat.combat(player, enemies)
 
 class ShopEvent(Event):
-    def __init__(self, name, encounterText, enterText, exitText, itemSet) -> None:
+    def __init__(self, name, encounterText, enterText, talkText, exitText, itemSet) -> None:
         super().__init__(name, 100)
         self.encounter = encounterText
         self.enter = enterText
         self.exit = exitText
+        self.talk = talkText
         self.itemSet = itemSet
     
     def effect(self, player):
@@ -45,38 +46,42 @@ class ShopEvent(Event):
                 if option == 'b':
                     player.buy_from_vendor(vendor)
                 elif option == 's':
-                    player.inventory.sell_item()
+                    player.money += player.inventory.sell_item()
                 elif option == 't':
-                    # TODO: Talk
-                    pass
+                    print(self.talk)
                 text.shop_menu(player)
                 option = input ("> ").lower()
-        elif enter == 'n':
-            print(self.exit)
         print(self.exit)
 
 class HealingEvent(Event):
-    def __init__(self, name, encounterText, successText, failText, successChance, healingAmount) -> None:
+    def __init__(self, name, encounterText, successText, failText, refuseText, successChance, healingAmount) -> None:
         super().__init__(name, successChance)
         self.encounter = encounterText
         self.success = successText
         self.fail = failText
+        self.refuse = refuseText
         self.healingAmount = healingAmount
 
     def effect(self, player):
         print(self.encounter)
-        if self.check_success():
-            print(self.success)
-            player.heal(self.healingAmount)
-        else:
-            print(self.fail)
+        accept = input("> ").lower()
+        while accept not in ['y', 'n']:
+            accept = input("> ").lower()
+        if accept == 'y':
+            if self.check_success():
+                print(self.success)
+                player.heal(self.healingAmount)
+            else:
+                print(self.fail)
+        elif accept == 'n':
+            print(self.refuse)
 
 # Event Instances
 random_combat = RandomCombatEvent('Random Combat')
-shop_rik_armor = ShopEvent('Rik\'s Armor Shop', text.rik_armor_shop_encounter, text.rik_armor_shop_enter, text.rik_armor_shop_exit, items.rik_armor_shop_item_set)
-shop_itz_magic = ShopEvent('Itz Magic', text.itz_magic_encounter, text.itz_magic_enter, text.itz_magic_exit, items.itz_magic_item_set)
+shop_rik_armor = ShopEvent('Rik\'s Armor Shop', text.rik_armor_shop_encounter, text.rik_armor_shop_enter, text.rik_armor_shop_talk, text.rik_armor_shop_exit, items.rik_armor_shop_item_set)
+shop_itz_magic = ShopEvent('Itz Magic', text.itz_magic_encounter, text.itz_magic_enter, text.itz_magic_talk, text.itz_magic_exit, items.itz_magic_item_set)
 heal_medussa_statue = HealingEvent('Medussa\'s Statue', text.medussa_statue_encounter, text.medussa_statue_success,
-                                text.medussa_statue_fail, 70, 50)
+                                text.medussa_statue_fail, text.medussa_statue_refuse, 70, 50)
 
 # Grouped events
 combat_event_list = [random_combat]

@@ -42,7 +42,7 @@ class Player(combat.Battler):
         self.inventory = inventory.Inventory() # Player's inventory
         self.equipment = {'Weapon' : None,
                             'Armor' : None} # Player's equipment, can be further expanded
-        self.money = 999 # Current money
+        self.money = 20 # Current money
         self.combos = [skills.slashCombo1, skills.armorBreaker1, skills.vampireStab1] # Player's selection of combos (atk, cp)
         self.spells = [skills.fireball, skills.divineBlessing, skills.benettFantasticVoyage] # Player's selection of spells (matk, mp)
         self.isAlly = True # Check if battler is an ally or not
@@ -53,12 +53,13 @@ class Player(combat.Battler):
             actualEquipment = self.equipment[equipment.objectType]
             if actualEquipment != None:
                 print('{} has been unequiped.'.format(actualEquipment.name))
-                actualEquipment.add_to_inventory(self.inventory)
+                actualEquipment.add_to_inventory(self.inventory, 1)
                 for stat in actualEquipment.statChangeList:
                     self.stats[stat] -= actualEquipment.statChangeList[stat]
             for stat in equipment.statChangeList:
                 self.stats[stat] += equipment.statChangeList[stat]
-            self.equipment[equipment.objectType] = equipment
+            self.equipment[equipment.objectType] = equipment.create_item(1)
+            self.inventory.decrease_item_amount(equipment, 1)
             print('{} has been equipped.'.format(equipment.name))
             print(equipment.show_stats())
         else:

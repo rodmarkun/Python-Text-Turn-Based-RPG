@@ -7,7 +7,7 @@ class Imp(combat.Enemy):
                     'hp' : 20,
                     'maxMp' : 10,
                     'mp' : 10,
-                    'atk' : 4,
+                    'atk' : 3,
                     'def' : 6,
                     'matk' : 10,
                     'mdef' : 10,
@@ -33,15 +33,15 @@ class Golem(combat.Enemy):
 
 class GiantSlime(combat.Enemy):
     def __init__(self) -> None:
-        stats = {'maxHp' : 200,
+        stats = {'maxHp' : 100,
                     'hp' : 200,
                     'maxMp' : 10,
                     'mp' : 10,
                     'atk' : 3,
                     'def' : 1,
                     'matk' : 10,
-                    'mdef' : 10,
-                    'speed' : 10,
+                    'mdef' : 1,
+                    'speed' : 2,
                     'critCh' : 0
         }
         super().__init__('Giant Slime', stats, xpReward=30, goldReward=randint(3, 15))

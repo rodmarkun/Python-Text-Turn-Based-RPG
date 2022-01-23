@@ -228,7 +228,8 @@ def create_enemy_group(lvl):
     # If lvl < 5 -> up to 2 enemies
     # If lvl < 10 -> up to 3 enemies
     # ...
-    enemy_quantity_for_level = {5 : 2, 
+    enemy_quantity_for_level = {2 : 1,
+                                5 : 2, 
                                 10 : 3, 
                                 100 : 4}
     

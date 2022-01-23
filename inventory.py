@@ -34,11 +34,12 @@ class Inventory():
         i = int(input("> "))
         if i == 0:
             print('Closing inventory...')
+            return 0
         elif i <= len(self.items):
             item = self.items[i-1]
-            moneyForItem = item.sell()
-            if item.amount <= 0:
-                self.items.pop(i - 1)
+            # TODO: Control both of these vars to avoid crash when selling items:
+            moneyForItem, amountToSell = item.sell()
+            self.decrease_item_amount(item, amountToSell)
             return moneyForItem
 
     # Equip a certain item from inventory (must be type 'Equipment')
@@ -52,7 +53,6 @@ class Inventory():
         elif i <= len(self.items):
             item = self.items[i-1]
             if type(item) == Equipment:
-                self.items.pop(i - 1)
                 return item
             else:
                 print('Please choose an equipable object.')
@@ -76,6 +76,13 @@ class Inventory():
             else:
                 print('Please choose a consumable object.')
                 return None
+
+    def decrease_item_amount(self, item, amount):
+        for actualItem in self.items:
+            if item.name == actualItem.name:
+                actualItem.amount -= amount
+                if actualItem.amount <= 0:
+                    self.items.remove(actualItem)
             
 class Item():
 
@@ -107,15 +114,14 @@ class Item():
             amountToSell = int(input("> "))
             if amountToSell <= self.amount and amountToSell > 0:
                 # Items sell for 50% the value they are worth for
-                moneyToReceive = self.individual_value * 0.5 * amountToSell
-                print('Are you sure you want to sell {} {} for {}? [y/n]'.format(amountToSell, 
+                moneyToReceive = int(round(self.individual_value * 0.5 * amountToSell))
+                print('Are you sure you want to sell {} {} for {}G? [y/n]'.format(amountToSell, 
                     self.name, moneyToReceive))
                 confirmation = input("> ")
                 if confirmation == 'y':
-                    self.amount -= amountToSell
                     print('{} {} sold for {}'.format(amountToSell, self.name, 
                         moneyToReceive))
-                    return moneyToReceive
+                    return moneyToReceive, amountToSell
                 else:
                     pass
             else:
@@ -132,13 +138,17 @@ class Item():
             elif price > player.money:
                 print('Not enough money!')
             else:
-                itemForPlayer = Item(self.name, self.description, amountToBuy, self.individual_value, self.objectType)
+                itemForPlayer = self.create_item(amountToBuy)
                 self.amount -= amountToBuy
                 itemForPlayer.add_to_inventory_player(player.inventory)
+                player.money -= price
         elif self.amount == 1 and self.individual_value <= player.money:
-            itemForPlayer = Item(self.name, self.description, 1, self.individual_value, self.objectType)
+            itemForPlayer = self.create_item(1)
             itemForPlayer.add_to_inventory_player(player.inventory)
             self.amount = 0
+
+    def create_item(self, amount):
+        return Item(self.name, self.description, amount, self.individual_value, self.objectType)
 
     def add_to_inventory_player(self, inventory):
         amountAdded = self.amount
@@ -154,6 +164,7 @@ class Item():
         if not alreadyInInventory:
             self.amount = amount
             inventory.items.append(self)
+
 
     def show_info(self):
         return '[x{}] {} ({}) - {}G'.format(self.amount, self.name, self.objectType, self.individual_value)
@@ -186,6 +197,9 @@ class Equipment(Item):
             statsString += '{} {}{} '.format(stat, sign, self.statChangeList[stat])
         statsString += ']'
         return statsString
+    
+    def create_item(self, amount):
+        return Equipment(self.name, self.description, amount, self.individual_value, self.objectType, self.statChangeList)
 
 class Potion(Item):
     def __init__(self, name, description, amount, individual_value, objectType, stat, amountToChange) -> None:
@@ -199,3 +213,6 @@ class Potion(Item):
             caster.heal(self.amountToChange)
         elif self.stat == 'mp':
             caster.recover_mp(self.amountToChange)
+    
+    def create_item(self, amount):
+        return Potion(self.name, self.description, amount, self.individual_value, self.objectType, self.stat, self.amountToChange)
