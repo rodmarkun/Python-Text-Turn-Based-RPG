@@ -228,13 +228,13 @@ def create_enemy_group(lvl):
             enemies_to_appear.append(enemy)
     
     # Dictionary for quantity of enemies to battle.
-    # If lvl < 5 -> up to 2 enemies
-    # If lvl < 10 -> up to 3 enemies
+    # If lvl < 5 -> up to 3 enemies
+    # If lvl < 10 -> up to 4 enemies
     # ...
-    enemy_quantity_for_level = {2 : 1,
-                                5 : 2, 
-                                10 : 3, 
-                                100 : 4}
+    enemy_quantity_for_level = {2 : 2,
+                                5 : 3, 
+                                10 : 4, 
+                                100 : 5}
     
     max_enemies = 1
     for max_level in enemy_quantity_for_level:

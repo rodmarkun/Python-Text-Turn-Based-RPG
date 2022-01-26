@@ -22,7 +22,7 @@ class Player(combat.Battler):
 
         self.lvl = 1 # Player Lvl
         self.xp = 0 # Current xp
-        self.xpToNextLvl = 25 # Amount of xp to reach next lvl is multiplied by 1.5 per level
+        self.xpToNextLvl = 30 # Amount of xp to reach next lvl is multiplied by 1.5 per level
         self.aptitudes = {'str' : 5,
                     'dex' : 5,
                     'int' : 5,
@@ -87,7 +87,7 @@ class Player(combat.Battler):
         while(self.xp >= self.xpToNextLvl):
             self.xp -= self.xpToNextLvl
             self.lvl += 1
-            self.xpToNextLvl = round(self.xpToNextLvl * 1.5)
+            self.xpToNextLvl = round(self.xpToNextLvl * 1.3)
             for stat in self.stats:
                 self.stats[stat] += 1
             self.aptitudePoints += 1
@@ -158,4 +158,11 @@ class Player(combat.Battler):
                     vendor.inventory.items.pop(i - 1)
                 vendor.inventory.show_inventory()
                 i = int(input("> "))
-            
+        
+    def show_quests(self):
+        print('/// ACTIVE ///')
+        for actq in self.activeQuests:
+            actq.show_info()
+        print('/// COMPLETED ///')
+        for cmpq in self.completedQuests:
+            cmpq.show_info()

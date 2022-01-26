@@ -165,3 +165,10 @@ Kneel before it? [y/n]'
 medussa_statue_success = 'You feel a pleasant warmth inside you.'
 medussa_statue_fail = 'Nothing happens. It was probably just your imagination.'
 medussa_statue_refuse = 'You decide not to kneel.'
+
+## Quests
+quest_caesarus_bandit_text = 'That Caesarus and his bandits have been causing\n\
+trouble to nearby villages. Take care of them.'
+shop_quest_caesarus_bandits = 'Have you heard about the bandits? They have been terrorizing\n\
+villages from around here. If you take care of them, maybe the\n\
+villagers would reward you or something. '

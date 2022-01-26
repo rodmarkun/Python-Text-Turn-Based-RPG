@@ -53,6 +53,8 @@ def play():
             text.inventory_menu()
             myPlayer.inventory.show_inventory()
             inventory_selections(myPlayer)
+        elif option == '5':
+            myPlayer.show_quests()
         else:
             print("Please enter a valid command")
 
@@ -71,13 +73,16 @@ def debug_add_test_items(myPlayer):
 
 def generate_event(myPlayer):
     # Event chances (in %)
-    combat_chance = 80
-    shop_chance = 10
+    combat_chance = 70
+    shop_chance = 20
     heal_chance = 10
 
     eventList = random.choices(events.event_type_list, weights=(combat_chance, shop_chance, heal_chance), k=1)
     # random.choices returns a list so we need to use eventList[0]
-    random.choice(eventList[0]).effect(myPlayer)
+    event = random.choice(eventList[0])
+    event.effect(myPlayer)
+    if event.isUnique:
+        events.event_type_list.eventList.remove(event)
 
 
 if __name__ == "__main__":
