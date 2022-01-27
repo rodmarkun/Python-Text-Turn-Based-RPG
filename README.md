@@ -50,9 +50,9 @@ python game.py
 - Enemy Customization
 - Skill Customization (Spells & Combos)
 - Events (Random combats, Shops, Adventures...)
+- Quest System
 
 ## To-Do
-- Quest system
 - Multiple default events
 - Combos based on actual equipment
 - Multi-Allied combat
