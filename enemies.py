@@ -74,7 +74,7 @@ class Bandit(combat.Enemy):
                     'speed' : 10,
                     'critCh' : 15
         }
-        super().__init__('Bandit', stats, xpReward=40, goldReward=randint(10, 15))
+        super().__init__('Bandit', stats, xpReward=30, goldReward=randint(10, 15))
 
 class CaesarusBandit(combat.Enemy):
     def __init__(self) -> None:

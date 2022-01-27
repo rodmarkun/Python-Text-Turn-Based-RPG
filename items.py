@@ -1,4 +1,5 @@
 import inventory
+import skills
 
 # Starting Items
 # -> Starting Weapons
@@ -35,6 +36,11 @@ thiefArmor = inventory.Equipment('Thief Armor', '', 1, 80, 'Armor', {'maxHp' : 4
 hpPotion = inventory.Potion('Health Potion', 'a', 1, 10, 'Consumable', 'hp', 15)
 mpPotion = inventory.Potion('Mana Potion', 'a', 1, 10, 'Consumable', 'mp', 15)
 
+# Grimoires
+grimoireFireball = inventory.Grimoire('Grimoire: Fireball', '', 1, 20, 'Consumable', skills.fireball)
+grimoireDivineBlessing = inventory.Grimoire('Grimoire: Divine Blessing', '', 1, 20, 'Consumable', skills.divineBlessing)
+grimoireEnhanceWeapon = inventory.Grimoire('Grimoire: Enhance Weapon', '', 1, 25, 'Consumable', skills.enhanceWeapon)
+
 # Shop Item Sets
 
 rik_armor_shop_item_set = [ longsword, 
@@ -53,4 +59,7 @@ itz_magic_item_set = [ staff,
                         mpPotion,
                         sageTunic,
                         sageStaff,
-                        studentRobes ]
+                        studentRobes,
+                        grimoireFireball,
+                        grimoireEnhanceWeapon,
+                        grimoireDivineBlessing ]

@@ -72,13 +72,14 @@ def give_initial_items(myPlayer):
     elif option == '3':
         items.oldStaff.add_to_inventory_player(myPlayer.inventory)
         items.oldRobes.add_to_inventory_player(myPlayer.inventory)
+        items.grimoireFireball.add_to_inventory_player(myPlayer.inventory)
     print('[ Remember to equip these items in Inventory > Equip Items ]')
 
 def generate_event(myPlayer):
     # Event chances (in %)
-    combat_chance = 0
-    shop_chance = 100
-    heal_chance = 0
+    combat_chance = 70
+    shop_chance = 20
+    heal_chance = 10
 
     eventList = random.choices(events.event_type_list, weights=(combat_chance, shop_chance, heal_chance), k=1)
     # random.choices returns a list so we need to use eventList[0]

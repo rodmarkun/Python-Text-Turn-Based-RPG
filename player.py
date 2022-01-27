@@ -22,7 +22,7 @@ class Player(combat.Battler):
 
         self.lvl = 1 # Player Lvl
         self.xp = 0 # Current xp
-        self.xpToNextLvl = 30 # Amount of xp to reach next lvl is multiplied by 1.5 per level
+        self.xpToNextLvl = 50 # Amount of xp to reach next lvl is multiplied by 1.5 per level
         self.aptitudes = {'str' : 5,
                     'dex' : 5,
                     'int' : 5,
@@ -44,7 +44,7 @@ class Player(combat.Battler):
                             'Armor' : None} # Player's equipment, can be further expanded
         self.money = 20 # Current money
         self.combos = [skills.slashCombo1, skills.armorBreaker1, skills.vampireStab1, skills.meditation1] # Player's selection of combos (atk, cp)
-        self.spells = [skills.fireball, skills.divineBlessing, skills.enhanceWeapon] # Player's selection of spells (matk, mp)
+        self.spells = [] # Player's selection of spells (matk, mp)
 
         self.activeQuests = []
         self.completedQuests = []
@@ -67,13 +67,14 @@ class Player(combat.Battler):
             print('{} has been equipped.'.format(equipment.name))
             print(equipment.show_stats())
         else:
-            print('{} is not equipable.'.format(equipment.name))
+            if equipment != None:
+                print('{} is not equipable.'.format(equipment.name))
         text.inventory_menu()
         self.inventory.show_inventory()
 
     # Use an item
     def use_item(self, item):
-        usable_items = [inventory.Potion]
+        usable_items = [inventory.Potion, inventory.Grimoire]
         if type(item) in usable_items:
             item.activate(self)
         text.inventory_menu()
@@ -87,7 +88,7 @@ class Player(combat.Battler):
         while(self.xp >= self.xpToNextLvl):
             self.xp -= self.xpToNextLvl
             self.lvl += 1
-            self.xpToNextLvl = round(self.xpToNextLvl * 1.3)
+            self.xpToNextLvl = round(self.xpToNextLvl * 1.5)
             for stat in self.stats:
                 self.stats[stat] += 1
             self.aptitudePoints += 1

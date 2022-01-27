@@ -216,3 +216,20 @@ class Potion(Item):
     
     def create_item(self, amount):
         return Potion(self.name, self.description, amount, self.individual_value, self.objectType, self.stat, self.amountToChange)
+
+class Grimoire(Item):
+    def __init__(self, name, description, amount, individual_value, objectType, skill) -> None:
+        super().__init__(name, description, amount, individual_value, objectType)
+        self.skill = skill
+
+    def activate(self, caster):
+        alreadyLearnt = False
+        for skill in caster.spells:
+            if skill.name == self.skill.name:
+                alreadyLearnt = True
+                break
+        if alreadyLearnt:
+            print('You already know this spell.')
+        else:
+            print('Using a \"{}\" you have learnt to cast: \"{}\"!'.format(self.name, self.skill.name))
+            caster.spells.append(self.skill)

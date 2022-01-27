@@ -89,7 +89,7 @@ def spell_menu(player):
     print('############################')
     index = 1
     for s in player.spells:
-            print(str('{} - {}'.format(index, s.name)))
+            print(str('{} - {} - {}MP'.format(index, s.name, s.cost)))
             index += 1
 
 def combo_menu(player):
@@ -98,7 +98,7 @@ def combo_menu(player):
     print('############################')
     index = 1
     for c in player.combos:
-            print(str('{} - {}'.format(index, c.name)))
+            print(str('{} - {} - {}CP'.format(index, c.name, c.cost)))
             index += 1
 
 def select_objective(targets):
