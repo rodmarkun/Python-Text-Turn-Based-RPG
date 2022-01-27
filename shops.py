@@ -8,6 +8,6 @@ class Shop():
         self.add_items_to_inventory_shop()
 
     def add_items_to_inventory_shop(self):
-        itemQuantity = random.randint(len(self.itemSet), len(self.itemSet) * 2)
+        itemQuantity = random.randint(len(self.itemSet)//2, len(self.itemSet))
         for _ in range(itemQuantity):
             random.choice(self.itemSet).add_to_inventory(self.inventory, 1)

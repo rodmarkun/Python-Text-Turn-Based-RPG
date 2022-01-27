@@ -1,6 +1,8 @@
 # Python Text-Based RPG
 # Pablo Rodríguez Martín - @rodmarkun
 
+from re import M
+from ssl import MemoryBIO
 import sys
 import random
 import text, player, items, events
@@ -38,7 +40,7 @@ def play():
     # Player instantiation
     myPlayer = player.Player("Test Player")
 
-    #debug_add_test_items(myPlayer)
+    give_initial_items(myPlayer)
 
     while myPlayer.alive:
         text.play_menu()
@@ -58,18 +60,21 @@ def play():
         else:
             print("Please enter a valid command")
 
-# DEBUG
-def debug_add_test_items(myPlayer):
-    # Adding some testing items
-    items.hpPotion.add_to_inventory(myPlayer.inventory)
-    items.mpPotion.add_to_inventory(myPlayer.inventory)
-    items.longsword.add_to_inventory_player(myPlayer.inventory)
-    items.longsword.add_to_inventory_player(myPlayer.inventory)
-    items.dagger.add_to_inventory_player(myPlayer.inventory)
-    items.staff.add_to_inventory_player(myPlayer.inventory)
-    items.clothArmor.add_to_inventory_player(myPlayer.inventory)
-    items.warhammer.add_to_inventory_player(myPlayer.inventory)
-    items.ironArmor.add_to_inventory_player(myPlayer.inventory)
+def give_initial_items(myPlayer):
+    print(text.initial_event_text)
+    option = str(input("> "))
+    while option not in ['1', '2', '3']:
+        option = str(input("> "))
+    if option == '1':
+        items.rustySword.add_to_inventory_player(myPlayer.inventory)
+        items.noviceArmor.add_to_inventory_player(myPlayer.inventory)
+    elif option == '2':
+        items.brokenDagger.add_to_inventory_player(myPlayer.inventory)
+        items.noviceArmor.add_to_inventory_player(myPlayer.inventory)
+    elif option == '3':
+        items.oldStaff.add_to_inventory_player(myPlayer.inventory)
+        items.oldRobes.add_to_inventory_player(myPlayer.inventory)
+    print('[ Remember to equip these items in Inventory > Equip Items ]')
 
 def generate_event(myPlayer):
     # Event chances (in %)

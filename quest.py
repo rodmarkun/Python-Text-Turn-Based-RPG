@@ -1,13 +1,14 @@
 class Quest():
-    def __init__(self, name, text, xpReward, goldReward, itemReward, event, proposalText) -> None:
+    def __init__(self, name, description, proposalText, xpReward, goldReward, itemReward, event, recommendedLvl) -> None:
         self.name = name
-        self.text = text
+        self.description = description
         self.xpReward = xpReward
         self.goldReward = goldReward
         self.itemReward = itemReward
         self.status = 'Not Active'
         self.event = event
         self.proposalText = proposalText
+        self.recommendedLvl = recommendedLvl
 
     def activate_quest(self, player):
         if self.status == 'Not Active':
@@ -25,7 +26,8 @@ class Quest():
     def show_info(self):
         print('###################')
         print(' - {} - '.format(self.name))
-        print(self.text)
+        print('Recommended level: {}'.format(self.recommendedLvl))
+        print(self.description)
         print('Rewards:')
         if self.xpReward > 0:
             print('XP: {}'.format(self.xpReward))
@@ -45,7 +47,7 @@ class Quest():
     
     def propose_quest(self, player):
         print(self.proposalText)
-        print('Accept? [y/n]')
+        print('Accept? [y/n] (Recommended level: {})'.format(self.recommendedLvl))
         option = input("> ").lower()
         while option not in ['y', 'n']:
             option = input("> ").lower()

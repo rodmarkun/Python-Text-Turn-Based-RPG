@@ -143,7 +143,7 @@ class Player(combat.Battler):
         elif aptitude == 'int':
             self.stats['matk'] += 1
         elif aptitude == 'wis':
-            self.stats['mp'] += 3
+            self.stats['maxMp'] += 3
         elif aptitude == 'const':
             self.stats['maxHp'] += 3
 

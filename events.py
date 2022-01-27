@@ -99,11 +99,12 @@ class HealingEvent(Event):
                 print(self.fail)
         elif accept == 'n':
             print(self.refuse)
+            
 
 # Quests
 # -> Caesarus
 caesarus_bandit_combat = FixedCombatEvent('Caesarus and his bandits', enemies.enemy_list_caesarus_bandit)
-quest_caesarus_bandit = quest.Quest('Caesarus and his bandits.', text.quest_caesarus_bandit_text, 100, 100, None, caesarus_bandit_combat, text.shop_quest_caesarus_bandits)
+quest_caesarus_bandit = quest.Quest('Caesarus and his bandits.', text.quest_caesarus_bandit_text, text.shop_quest_caesarus_bandits, 100, 100, None, caesarus_bandit_combat, 7)
 
 # Event Instances
 random_combat = RandomCombatEvent('Random Combat')
