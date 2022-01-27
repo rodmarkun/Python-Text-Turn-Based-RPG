@@ -1,8 +1,6 @@
 # Python Text-Based RPG
 # Pablo Rodríguez Martín - @rodmarkun
 
-from re import M
-from ssl import MemoryBIO
 import sys
 import random
 import text, player, items, events
@@ -78,9 +76,9 @@ def give_initial_items(myPlayer):
 
 def generate_event(myPlayer):
     # Event chances (in %)
-    combat_chance = 70
-    shop_chance = 20
-    heal_chance = 10
+    combat_chance = 0
+    shop_chance = 100
+    heal_chance = 0
 
     eventList = random.choices(events.event_type_list, weights=(combat_chance, shop_chance, heal_chance), k=1)
     # random.choices returns a list so we need to use eventList[0]

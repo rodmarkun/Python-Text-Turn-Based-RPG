@@ -140,7 +140,7 @@ initial_event_text = 'This is finally the day. You have registered your name in 
 As a gift, they let you choose between three sets of gear. Which one do you choose?\n\
 1 - Warrrior Set\n\
 2 - Rogue Set\n\
-3 - Magic Set\n'
+3 - Magic Set'
 
 ## Shops
 
@@ -176,5 +176,5 @@ medussa_statue_refuse = 'You decide not to kneel.'
 quest_caesarus_bandit_text = 'That Caesarus and his bandits have been causing\n\
 trouble to nearby villages. Take care of them.'
 shop_quest_caesarus_bandits = 'Have you heard about the bandits? They have been terrorizing\n\
-villages from around here. If you take care of them, maybe the\n\
-villagers would reward you or something. '
+villages from around here. A guy named Caesarus leads them. If you take care of them,\n\
+maybe the villagers would reward you or something. '

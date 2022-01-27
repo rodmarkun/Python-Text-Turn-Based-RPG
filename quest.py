@@ -24,8 +24,7 @@ class Quest():
             self.give_rewards(player)
 
     def show_info(self):
-        print('###################')
-        print(' - {} - '.format(self.name))
+        print('\n - {} - '.format(self.name))
         print('Recommended level: {}'.format(self.recommendedLvl))
         print(self.description)
         print('Rewards:')
@@ -35,6 +34,7 @@ class Quest():
             print('G: {}'.format(self.goldReward))
         if self.itemReward != None:
             print('Item: {}'.format(self.itemReward.name))
+        print('')
 
     def give_rewards(self, player):
         print('\"{}\" quest completed. You earn {}xp and {}G'.format(self.name, self.xpReward, self.goldReward))
