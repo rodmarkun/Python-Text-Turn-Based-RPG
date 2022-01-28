@@ -71,10 +71,14 @@ def inventory_menu():
     print('#        Q - Quit          #')
     print('############################')
 
-def combat_menu(player, enemies):
+def combat_menu(player, allies, enemies):
     print('############################')
     print('{} - HP: {}/{} - MP: {}/{} - CP: {}'.format(player.name, player.stats['hp'], player.stats['maxHp'],
                                                 player.stats['mp'], player.stats['maxMp'], player.comboPoints))
+    for ally in allies:
+        if ally != player:
+            print('{} - HP: {}/{}'.format(ally.name, ally.stats['hp'], ally.stats['maxHp']))
+    print('-----------------------------')
     for enemy in enemies:
         print('{} - HP: {}/{}'.format(enemy.name, enemy.stats['hp'], enemy.stats['maxHp']))
     print('############################')
@@ -171,6 +175,14 @@ Kneel before it? [y/n]'
 medussa_statue_success = 'You feel a pleasant warmth inside you.'
 medussa_statue_fail = 'Nothing happens. It was probably just your imagination.'
 medussa_statue_refuse = 'You decide not to kneel.'
+
+# Inn encounter
+inn_event_encounter = 'While travelling across a forest, you find an Inn.\n\
+You can rest here, but it won\'t be free.\n\
+Pay 15G for one night? [y/n]'
+inn_event_success = 'You rest in a comfortable bed tonight.'
+inn_event_fail = 'You do not have enough money.'
+inn_event_refuse = 'You decide not to pay.'
 
 ## Quests
 quest_caesarus_bandit_text = 'That Caesarus and his bandits have been causing\n\

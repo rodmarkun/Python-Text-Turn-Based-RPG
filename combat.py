@@ -1,6 +1,6 @@
 import math
 import random
-import skills
+import player
 import text
 
 '''
@@ -73,11 +73,11 @@ class Enemy(Battler):
 '''
 Main combat loop
 '''
-# TODO: Change "player" for "allies". There will be other characters aside from the player
-# for the user to control.
-def combat(player, enemies):
+
+def combat(myPlayer, enemies):
     # All battlers are inserted into the Battlers list and ordered by speed (turn order)
-    battlers = define_battlers(player, enemies)
+    allies = [myPlayer]
+    battlers = define_battlers(allies, enemies)
     enemy_exp = 0 
     enemy_money = 0
 
@@ -87,13 +87,12 @@ def combat(player, enemies):
         enemy_exp += enemy.xpReward
         enemy_money += enemy.goldReward
     # The battle will go on while the player is still alive and there are still enemies to defeat
-    while player.alive and len(enemies) > 0:
+    while myPlayer.alive and len(enemies) > 0:
         # Battlers should be updated for speed changes (buffs/debuffs)
-        battlers = define_battlers(player, enemies)
+        battlers = define_battlers(allies, enemies)
         for battler in battlers:
-            # If the battler is an ally, the user has control over its actions
-            if battler.isAlly:
-                text.combat_menu(player, enemies)
+            if type(battler) == player.Player:
+                text.combat_menu(myPlayer, allies, enemies)
                 cmd = input('> ').lower()
                 while cmd not in ['a', 'c', 's']:
                     print('Please enter a valid command')
@@ -103,68 +102,79 @@ def combat(player, enemies):
                     targeted_enemy = select_target(enemies)
                     battler.normal_attack(targeted_enemy)
                     battler.addComboPoints(1)
-                    check_if_dead(player, enemies, battlers)
+                    check_if_dead(allies, enemies, battlers)
                 # Cast a spell
                 elif 's' in cmd:
                     text.spell_menu(battler)
                     option = int(input("> "))
-                    while option not in range(len(player.spells)+1):
+                    while option not in range(len(myPlayer.spells)+1):
                         print('Please enter a valid number')
                         option = int(input("> "))
                     if option != 0:
-                        spellChosen = player.spells[option - 1]
+                        spellChosen = myPlayer.spells[option - 1]
                         if spellChosen.isTargeted:
                             target = select_target(battlers)
-                            spellChosen.effect(player, target)
-                            check_if_dead(player, enemies, battlers)
+                            spellChosen.effect(myPlayer, target)
+                            check_if_dead(allies, enemies, battlers)
                         else:
                             if spellChosen.defaultTarget == 'self':
-                                spellChosen.effect(player, player)
+                                spellChosen.effect(myPlayer, myPlayer)
                             elif spellChosen.defaultTarget == 'all_enemies':
-                                spellChosen.effect(player, enemies)
-                                check_if_dead(player, enemies, battlers)
+                                spellChosen.effect(myPlayer, enemies)
+                                check_if_dead(allies, enemies, battlers)
+                            elif spellChosen.defaultTarget == 'allies':
+                                spellChosen.effect(myPlayer, allies)
                 # Use a combo
                 elif 'c' in cmd:
                     text.combo_menu(battler)
                     option = int(input("> "))
-                    while option not in range(len(player.combos)+1):
+                    while option not in range(len(myPlayer.combos)+1):
                         print('Please enter a valid number')
                         option = int(input("> "))
                     if option != 0:
-                        comboChosen = player.combos[option - 1]
+                        comboChosen = myPlayer.combos[option - 1]
                         if comboChosen.isTargeted:
                             target = select_target(battlers)
-                            comboChosen.effect(player, target)
-                            check_if_dead(player, enemies, battlers)
+                            comboChosen.effect(myPlayer, target)
+                            check_if_dead(allies, enemies, battlers)
                         else:
                             if comboChosen.defaultTarget == 'self':
-                                comboChosen.effect(player, player)
+                                comboChosen.effect(myPlayer, myPlayer)
                             elif comboChosen.defaultTarget == 'all_enemies':
-                                comboChosen.effect(player, enemies)
-                                check_if_dead(player, enemies, battlers)
+                                comboChosen.effect(myPlayer, enemies)
+                                check_if_dead(allies, enemies, battlers)
             else:
-                # For now, enemies will just perform a normal attack against the player.
-                # This can be expanded to work as a functional AI
-                battler.normal_attack(player)
+                if battler.isAlly:
+                    if len(enemies) > 0:
+                        randomEnemy = random.choice(enemies)
+                        battler.normal_attack(randomEnemy)
+                        check_if_dead(allies, enemies, battlers)
+                else:
+                    # For now, enemies will just perform a normal attack against the player.
+                    # This can be expanded to work as a functional AI
+                    randomAlly = random.choice(allies)
+                    battler.normal_attack(randomAlly)
+                    check_if_dead(allies, enemies, battlers)
 
         # A turn has passed
         # Check turns for buffs and debuffs
         for battler in battlers:
             check_turns_buffs_and_debuffs(battler, False)
-    if player.alive:
+    if myPlayer.alive:
         # Deactivate all existent buffs and debuffs
-        check_turns_buffs_and_debuffs(player, True)
+        check_turns_buffs_and_debuffs(myPlayer, True)
         # Add experience to players
-        player.add_exp(enemy_exp)
-        player.add_money(enemy_money)
+        myPlayer.add_exp(enemy_exp)
+        myPlayer.add_money(enemy_money)
         # Restart Combo Points
-        player.comboPoints = 0
+        myPlayer.comboPoints = 0
 
 # Returns the battlers list, ordered by speed (turn order)
 # This should be updated to when the change from "player" to "allies" is made.
-def define_battlers(player, enemies):
+def define_battlers(allies, enemies):
     battlers = enemies.copy()
-    battlers.append(player)
+    for ally in allies:
+        battlers.append(ally)
     battlers.sort(key=lambda b: b.stats['speed'], reverse=True)
     return battlers
 
@@ -210,12 +220,18 @@ def check_turns_buffs_and_debuffs(target, deactivate):
 # Checks if a battler is dead and removes it from the appropiate lists
 def check_if_dead(allies, enemies, battlers):
     dead_bodies = []
+    for ally in allies:
+        if ally.alive == False:
+            dead_bodies.append(ally)
     for target in enemies:
         if target.alive == False:
             dead_bodies.append(target)
     for dead in dead_bodies:
         battlers.remove(dead)
-        enemies.remove(dead)
+        if dead in enemies:
+            enemies.remove(dead)
+        elif dead in allies:
+            allies.remove(dead)
 
 # Fully heal a target
 def fully_heal(target):
@@ -236,10 +252,10 @@ def create_enemy_group(lvl):
     # If lvl < 5 -> up to 3 enemies
     # If lvl < 10 -> up to 4 enemies
     # ...
-    enemy_quantity_for_level = {2 : 2,
-                                5 : 3, 
-                                10 : 4, 
-                                100 : 5}
+    enemy_quantity_for_level = {3 : 1,
+                                5 : 2, 
+                                10 : 3, 
+                                100 : 4}
     
     max_enemies = 1
     for max_level in enemy_quantity_for_level:

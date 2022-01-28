@@ -234,3 +234,6 @@ class Grimoire(Item):
         else:
             print('Using a \"{}\" you have learnt to cast: \"{}\"!'.format(self.name, self.skill.name))
             caster.spells.append(self.skill)
+
+    def create_item(self, amount):
+        return Grimoire(self.name, self.description, amount, self.individual_value, self.objectType, self.skill)

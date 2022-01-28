@@ -41,6 +41,8 @@ grimoireFireball = inventory.Grimoire('Grimoire: Fireball', '', 1, 20, 'Consumab
 grimoireDivineBlessing = inventory.Grimoire('Grimoire: Divine Blessing', '', 1, 20, 'Consumable', skills.spellDivineBlessing)
 grimoireEnhanceWeapon = inventory.Grimoire('Grimoire: Enhance Weapon', '', 1, 25, 'Consumable', skills.spellEnhanceWeapon)
 grimoireInferno = inventory.Grimoire('Grimoire: Inferno', '', 1, 50, 'Consumable', skills.spellInferno)
+grimoireSummonSkeleton = inventory.Grimoire('Grimoire: Summon Skeleton', '', 1, 30, 'Consumable', skills.spellSkeletonSummoning)
+grimoireSummonFireSpirit = inventory.Grimoire('Grimoire: Fire Spirit', '', 1, 60, 'Consumable', skills.spellFireSpiritSummonning)
 
 # Shop Item Sets
 
@@ -64,4 +66,6 @@ itz_magic_item_set = [ staff,
                         grimoireFireball,
                         grimoireEnhanceWeapon,
                         grimoireDivineBlessing,
-                        grimoireInferno ]
+                        grimoireInferno,
+                        grimoireSummonSkeleton,
+                        grimoireSummonFireSpirit ]

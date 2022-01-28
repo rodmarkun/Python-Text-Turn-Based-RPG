@@ -21,7 +21,7 @@ class Player(combat.Battler):
 
         self.lvl = 1 # Player Lvl
         self.xp = 0 # Current xp
-        self.xpToNextLvl = 50 # Amount of xp to reach next lvl is multiplied by 1.5 per level
+        self.xpToNextLvl = 35 # Amount of xp to reach next lvl is multiplied by 1.5 per level
         self.aptitudes = {'str' : 5,
                     'dex' : 5,
                     'int' : 5,
@@ -93,7 +93,7 @@ class Player(combat.Battler):
         while(self.xp >= self.xpToNextLvl):
             self.xp -= self.xpToNextLvl
             self.lvl += 1
-            self.xpToNextLvl = round(self.xpToNextLvl * 1.5)
+            self.xpToNextLvl = round(self.xpToNextLvl * 1.5 + 10 * self.lvl * self.lvl)
             for stat in self.stats:
                 self.stats[stat] += 1
             self.aptitudePoints += 1

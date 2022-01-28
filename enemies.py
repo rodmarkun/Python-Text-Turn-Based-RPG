@@ -44,12 +44,12 @@ class Golem(combat.Enemy):
                     'speed' : 4,
                     'critCh' : 0
         }
-        super().__init__('Golem', stats, xpReward=15, goldReward=randint(2, 15))
+        super().__init__('Golem', stats, xpReward=15, goldReward=randint(6, 15))
 
 class GiantSlime(combat.Enemy):
     def __init__(self) -> None:
-        stats = {'maxHp' : 100,
-                    'hp' : 100,
+        stats = {'maxHp' : 80,
+                    'hp' : 80,
                     'maxMp' : 10,
                     'mp' : 10,
                     'atk' : 3,
@@ -59,7 +59,7 @@ class GiantSlime(combat.Enemy):
                     'speed' : 2,
                     'critCh' : 0
         }
-        super().__init__('Giant Slime', stats, xpReward=30, goldReward=randint(3, 15))
+        super().__init__('Giant Slime', stats, xpReward=30, goldReward=randint(3, 12))
 
 class Bandit(combat.Enemy):
     def __init__(self) -> None:

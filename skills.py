@@ -1,3 +1,5 @@
+import allies
+
 '''
 Skill is the parent class for Spells(matk) and Combos(atk)
 '''
@@ -99,6 +101,17 @@ class BuffDebuffSpell(Spell):
             buff = BuffDebuff(self.name, target, self.statToChange, self.amountToChange, self.turns)
             buff.activate()
 
+class SummonSpell(Spell):
+    def __init__(self, name, description, power, cost, isTargeted, defaultTarget, summoning) -> None:
+        super().__init__(name, description, power, cost, isTargeted, defaultTarget)
+        self.summoning = summoning
+
+    def effect(self, caster, target):
+        if self.check_mp(caster):
+            summoningInst = self.summoning()
+            target.append(summoningInst)
+            print('You summoned {}'.format(summoningInst.name))
+
 ##### COMBOS #####
 
 class SlashCombo(Combo):
@@ -190,6 +203,8 @@ spellFireball = DamageSpell('Fireball', '', 15, 3, True, None)
 spellDivineBlessing = RecoverySpell('Divine Blessing', '', 8, 4, 'hp', True, None)
 spellEnhanceWeapon = BuffDebuffSpell('Enhance Weapon', '', 0, 5, False, 'self', 'atk', 0.5, 3)
 spellInferno = DamageSpell('Inferno', '', 14, 7, False, 'all_enemies')
+spellSkeletonSummoning = SummonSpell('Summon Skeleton', '', 0, 4, False, 'allies', allies.SummonedSkeleton)
+spellFireSpiritSummonning = SummonSpell('Summon Fire Spirit', '', 0, 12, False, 'allies', allies.SummonedFireSpirit)
 
 comboSlash1 = SlashCombo('Slash Combo I', '', 3, True, None, 3)
 comboSlash2 = SlashCombo('Slash Combo II', '', 3, True, None, 4)

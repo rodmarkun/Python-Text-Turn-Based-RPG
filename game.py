@@ -77,9 +77,9 @@ def give_initial_items(myPlayer):
 
 def generate_event(myPlayer):
     # Event chances (in %)
-    combat_chance = 70
+    combat_chance = 65
     shop_chance = 20
-    heal_chance = 10
+    heal_chance = 15
 
     eventList = random.choices(events.event_type_list, weights=(combat_chance, shop_chance, heal_chance), k=1)
     # random.choices returns a list so we need to use eventList[0]
