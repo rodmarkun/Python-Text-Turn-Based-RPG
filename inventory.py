@@ -181,9 +181,10 @@ This would increase hp by 3, atk by 2 and decrease speed by 2.
 
 # TODO: It could be interesting to add skills to some weapons
 class Equipment(Item):
-    def __init__(self, name, description, amount, individual_value, objectType, statChangeList) -> None:
+    def __init__(self, name, description, amount, individual_value, objectType, statChangeList, combo) -> None:
         super().__init__(name, description, amount, individual_value, objectType)
         self.statChangeList = statChangeList
+        self.combo = combo
     
     def show_info(self):
         return '[x{}] {} ({}) {} - {}G'.format(self.amount, self.name, self.objectType, self.show_stats(), self.individual_value)
@@ -199,7 +200,7 @@ class Equipment(Item):
         return statsString
     
     def create_item(self, amount):
-        return Equipment(self.name, self.description, amount, self.individual_value, self.objectType, self.statChangeList)
+        return Equipment(self.name, self.description, amount, self.individual_value, self.objectType, self.statChangeList, self.combo)
 
 class Potion(Item):
     def __init__(self, name, description, amount, individual_value, objectType, stat, amountToChange) -> None:

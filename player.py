@@ -1,7 +1,6 @@
 import inventory
 import text
 import combat
-import skills
 
 class Player(combat.Battler):
 
@@ -43,7 +42,7 @@ class Player(combat.Battler):
         self.equipment = {'Weapon' : None,
                             'Armor' : None} # Player's equipment, can be further expanded
         self.money = 20 # Current money
-        self.combos = [skills.slashCombo1, skills.armorBreaker1, skills.vampireStab1, skills.meditation1] # Player's selection of combos (atk, cp)
+        self.combos = [] # Player's selection of combos (atk, cp)
         self.spells = [] # Player's selection of spells (matk, mp)
 
         self.activeQuests = []
@@ -58,11 +57,17 @@ class Player(combat.Battler):
             if actualEquipment != None:
                 print('{} has been unequiped.'.format(actualEquipment.name))
                 actualEquipment.add_to_inventory(self.inventory, 1)
+                if actualEquipment.combo != None:
+                    self.combos.remove(actualEquipment.combo)
+                    print('You can no longer use the combo: {}'.format(actualEquipment.combo.name))
                 for stat in actualEquipment.statChangeList:
                     self.stats[stat] -= actualEquipment.statChangeList[stat]
             for stat in equipment.statChangeList:
                 self.stats[stat] += equipment.statChangeList[stat]
             self.equipment[equipment.objectType] = equipment.create_item(1)
+            if equipment.combo != None and equipment.combo not in self.combos:
+                self.combos.append(equipment.combo)
+                print('You can now use the combo: {}'.format(equipment.combo.name))
             self.inventory.decrease_item_amount(equipment, 1)
             print('{} has been equipped.'.format(equipment.name))
             print(equipment.show_stats())

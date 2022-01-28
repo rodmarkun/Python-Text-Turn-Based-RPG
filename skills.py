@@ -64,8 +64,14 @@ class DamageSpell(Spell):
 
     def effect(self, caster, target):
         if self.check_mp(caster):
-            dmg = self.power + (caster.stats['matk'] - target.stats['mdef'])
-        target.take_dmg(dmg)
+            if self.isTargeted:
+                dmg = self.power + (caster.stats['matk'] - target.stats['mdef'])
+                target.take_dmg(dmg)
+            else:
+                if self.defaultTarget == 'all_enemies':
+                    for enemy in target:
+                        dmg = self.power + (caster.stats['matk'] - enemy.stats['mdef'])
+                        enemy.take_dmg(dmg)
 
 class RecoverySpell(Spell):
     def __init__(self, name, description, power, mpCost, stat, isTargeted, defaultTarget) -> None:
@@ -180,11 +186,15 @@ class BuffDebuff():
 
 ##### SPELL & COMBO INSTANCES #####
 
-fireball = DamageSpell('Fireball', '', 15, 3, True, None)
-divineBlessing = RecoverySpell('Divine Blessing', '', 8, 4, 'hp', True, None)
-enhanceWeapon = BuffDebuffSpell('Enhance Weapon', '', 0, 5, False, 'self', 'atk', 0.5, 3)
+spellFireball = DamageSpell('Fireball', '', 15, 3, True, None)
+spellDivineBlessing = RecoverySpell('Divine Blessing', '', 8, 4, 'hp', True, None)
+spellEnhanceWeapon = BuffDebuffSpell('Enhance Weapon', '', 0, 5, False, 'self', 'atk', 0.5, 3)
+spellInferno = DamageSpell('Inferno', '', 14, 7, False, 'all_enemies')
 
-slashCombo1 = SlashCombo('Slash Combo I', '', 3, True, None, 3)
-armorBreaker1 = ArmorBreakingCombo('Armor Break I', '', 2, True, None, -0.3)
-vampireStab1 = VampirismCombo('Vampire Stab I', '', 2, True, None, 0.5)
-meditation1 = RecoveryCombo('Meditation I', '', 1, 'mp', 5, False, 'self')
+comboSlash1 = SlashCombo('Slash Combo I', '', 3, True, None, 3)
+comboSlash2 = SlashCombo('Slash Combo II', '', 3, True, None, 4)
+comboArmorBreaker1 = ArmorBreakingCombo('Armor Break I', '', 2, True, None, -0.3)
+comboVampireStab1 = VampirismCombo('Vampire Stab I', '', 2, True, None, 0.5)
+comboVampireStab2 = VampirismCombo('Vampire Stab II', '', 2, True, None, 0.75)
+comboMeditation1 = RecoveryCombo('Meditation I', '', 1, 'mp', 5, False, 'self')
+comboMeditation2 = RecoveryCombo('Meditation II', '', 2, 'mp', 15, False, 'self')

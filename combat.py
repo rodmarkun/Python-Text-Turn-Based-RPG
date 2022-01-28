@@ -103,7 +103,7 @@ def combat(player, enemies):
                     targeted_enemy = select_target(enemies)
                     battler.normal_attack(targeted_enemy)
                     battler.addComboPoints(1)
-                    check_if_dead(targeted_enemy, enemies, battlers)
+                    check_if_dead(player, enemies, battlers)
                 # Cast a spell
                 elif 's' in cmd:
                     text.spell_menu(battler)
@@ -116,10 +116,13 @@ def combat(player, enemies):
                         if spellChosen.isTargeted:
                             target = select_target(battlers)
                             spellChosen.effect(player, target)
-                            check_if_dead(target, enemies, battlers)
+                            check_if_dead(player, enemies, battlers)
                         else:
                             if spellChosen.defaultTarget == 'self':
                                 spellChosen.effect(player, player)
+                            elif spellChosen.defaultTarget == 'all_enemies':
+                                spellChosen.effect(player, enemies)
+                                check_if_dead(player, enemies, battlers)
                 # Use a combo
                 elif 'c' in cmd:
                     text.combo_menu(battler)
@@ -132,10 +135,13 @@ def combat(player, enemies):
                         if comboChosen.isTargeted:
                             target = select_target(battlers)
                             comboChosen.effect(player, target)
-                            check_if_dead(target, enemies, battlers)
+                            check_if_dead(player, enemies, battlers)
                         else:
                             if comboChosen.defaultTarget == 'self':
                                 comboChosen.effect(player, player)
+                            elif comboChosen.defaultTarget == 'all_enemies':
+                                comboChosen.effect(player, enemies)
+                                check_if_dead(player, enemies, battlers)
             else:
                 # For now, enemies will just perform a normal attack against the player.
                 # This can be expanded to work as a functional AI
@@ -202,15 +208,14 @@ def check_turns_buffs_and_debuffs(target, deactivate):
             bd.check_turns()
 
 # Checks if a battler is dead and removes it from the appropiate lists
-def check_if_dead(target, enemies, battlers):
-    if target.isAlly:
-        # Here it should be removed of the "Allies" list
-        # Player doesnt use this function for now
-        pass
-    else:
+def check_if_dead(allies, enemies, battlers):
+    dead_bodies = []
+    for target in enemies:
         if target.alive == False:
-            battlers.remove(target)
-            enemies.remove(target)
+            dead_bodies.append(target)
+    for dead in dead_bodies:
+        battlers.remove(dead)
+        enemies.remove(dead)
 
 # Fully heal a target
 def fully_heal(target):
