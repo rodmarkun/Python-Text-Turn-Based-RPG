@@ -51,10 +51,11 @@ python game.py
 - Skill Customization (Spells & Combos)
 - Events (Random combats, Shops, Adventures...)
 - Quest System
+- Combos are based on actual equipment
+- Spells and with different targeting (selected target, caster, all enemies, all allies, etc)
 
 ## To-Do
 - Multiple default events
-- Combos based on actual equipment
 - Multi-Allied combat
 
 ## Other useful info
