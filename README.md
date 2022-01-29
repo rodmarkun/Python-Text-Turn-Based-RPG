@@ -52,11 +52,8 @@ python game.py
 - Events (Random combats, Shops, Adventures...)
 - Quest System
 - Combos are based on actual equipment
-- Spells and with different targeting (selected target, caster, all enemies, all allies, etc)
-
-## To-Do
-- Multiple default events
-- Multi-Allied combat
+- Spells and combos with different targeting (selected target, caster, all enemies, all allies, etc)
+- Summonings and multi-allied combat
 
 ## Other useful info
 You can freely contact me on [Twitter](https://twitter.com/rodmarkun) or sending a mail to rodmarprogrammer@gmail.com
