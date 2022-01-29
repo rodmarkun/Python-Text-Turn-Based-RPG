@@ -33,12 +33,12 @@ class Slime(combat.Enemy):
 
 class Golem(combat.Enemy):
     def __init__(self) -> None:
-        stats = {'maxHp' : 38,
-                    'hp' : 38,
+        stats = {'maxHp' : 32,
+                    'hp' : 32,
                     'maxMp' : 10,
                     'mp' : 10,
                     'atk' : 3,
-                    'def' : 12,
+                    'def' : 10,
                     'matk' : 5,
                     'mdef' : 4,
                     'speed' : 4,
@@ -52,7 +52,7 @@ class GiantSlime(combat.Enemy):
                     'hp' : 80,
                     'maxMp' : 10,
                     'mp' : 10,
-                    'atk' : 3,
+                    'atk' : 2,
                     'def' : 1,
                     'matk' : 10,
                     'mdef' : 1,
@@ -63,8 +63,8 @@ class GiantSlime(combat.Enemy):
 
 class Bandit(combat.Enemy):
     def __init__(self) -> None:
-        stats = {'maxHp' : 30,
-                    'hp' : 30,
+        stats = {'maxHp' : 35,
+                    'hp' : 35,
                     'maxMp' : 10,
                     'mp' : 10,
                     'atk' : 6,
@@ -78,8 +78,8 @@ class Bandit(combat.Enemy):
 
 class CaesarusBandit(combat.Enemy):
     def __init__(self) -> None:
-        stats = {'maxHp' : 50,
-                    'hp' : 50,
+        stats = {'maxHp' : 60,
+                    'hp' : 60,
                     'maxMp' : 10,
                     'mp' : 10,
                     'atk' : 10,
@@ -94,8 +94,8 @@ class CaesarusBandit(combat.Enemy):
 # Possible Enemy : (LowestPlayerLevelForAppearing, HighestPlayerLevelForAppearing)
 possible_enemies = {Slime: (1, 2),
                     Imp : (1, 4),
-                    Golem : (2, 10),
-                    GiantSlime : (3, 100),
+                    Golem : (3, 10),
+                    GiantSlime : (4, 100),
                     Bandit : (4, 100)}
 
 # Fixed Combat Enemies

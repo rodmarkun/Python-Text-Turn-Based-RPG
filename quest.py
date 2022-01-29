@@ -39,7 +39,7 @@ class Quest():
     def give_rewards(self, player):
         print('\"{}\" quest completed. You earn {}xp and {}G'.format(self.name, self.xpReward, self.goldReward))
         if self.xpReward > 0:
-            player.addExp(self.xpReward)
+            player.add_exp(self.xpReward)
         if self.goldReward > 0:
             player.money += self.goldReward
         if self.itemReward != None:

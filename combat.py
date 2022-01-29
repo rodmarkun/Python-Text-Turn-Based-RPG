@@ -30,7 +30,7 @@ class Battler():
     # Normal attack all battlers have
     def normal_attack(self, defender):
         print('{} attacks!'.format(self.name))
-        dmg = round(self.stats['atk'] * (100/(100 + defender.stats['def'])))
+        dmg = round(self.stats['atk'] * (100/(100 + defender.stats['def']*1.5)))
         # Check for critical attack
         if self.stats['critCh'] > random.randint(0, 100):
             print('Critical blow!')
@@ -227,7 +227,8 @@ def check_if_dead(allies, enemies, battlers):
         if target.alive == False:
             dead_bodies.append(target)
     for dead in dead_bodies:
-        battlers.remove(dead)
+        if dead in battlers:
+            battlers.remove(dead)
         if dead in enemies:
             enemies.remove(dead)
         elif dead in allies:

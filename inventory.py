@@ -145,6 +145,7 @@ class Item():
         elif self.amount == 1 and self.individual_value <= player.money:
             itemForPlayer = self.create_item(1)
             itemForPlayer.add_to_inventory_player(player.inventory)
+            player.money -= self.individual_value
             self.amount = 0
 
     def create_item(self, amount):
@@ -179,7 +180,6 @@ and a number with the amount of points that stat changes, like:
 This would increase hp by 3, atk by 2 and decrease speed by 2.
 '''
 
-# TODO: It could be interesting to add skills to some weapons
 class Equipment(Item):
     def __init__(self, name, description, amount, individual_value, objectType, statChangeList, combo) -> None:
         super().__init__(name, description, amount, individual_value, objectType)

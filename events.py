@@ -123,7 +123,7 @@ class InnEvent(HealingEvent):
 # Quests
 # -> Caesarus
 caesarus_bandit_combat = FixedCombatEvent('Caesarus and his bandits', enemies.enemy_list_caesarus_bandit)
-quest_caesarus_bandit = quest.Quest('Caesarus and his bandits.', text.quest_caesarus_bandit_text, text.shop_quest_caesarus_bandits, 100, 100, None, caesarus_bandit_combat, 7)
+quest_caesarus_bandit = quest.Quest('Caesarus and his bandits.', text.quest_caesarus_bandit_text, text.shop_quest_caesarus_bandits, 100, 100, None, caesarus_bandit_combat, 5)
 
 # Event Instances
 random_combat = RandomCombatEvent('Random Combat')

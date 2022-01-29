@@ -86,7 +86,14 @@ def generate_event(myPlayer):
     event = random.choice(eventList[0])
     event.effect(myPlayer)
     if event.isUnique:
-        events.event_type_list.eventList.remove(event)
+        for evList in events.event_type_list:
+            for e in evList:
+                if e.name == event.name:
+                    for quest in myPlayer.activeQuests:
+                        if quest.event == event:
+                            quest.complete_quest(myPlayer)
+                    evList.remove(event)
+                    break
 
 
 if __name__ == "__main__":

@@ -142,7 +142,7 @@ def enter_shop(name):
 # Initial event
 initial_event_text = 'This is finally the day. You have registered your name in the Adventurers Guild.\n\
 As a gift, they let you choose between three sets of gear. Which one do you choose?\n\
-1 - Warrrior Set\n\
+1 - Warrior Set\n\
 2 - Rogue Set\n\
 3 - Magic Set'
 
