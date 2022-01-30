@@ -1,4 +1,11 @@
 import combat
+# Imports combat for inheriting Battler's data
+
+'''
+Allies help the player in battle. For now all the ones detailed here
+are summoned by spells, though allies granted by an event or any
+other reason can also be defined here. There are mainly their stats.
+'''
 
 class SummonedSkeleton(combat.Battler):
     def __init__(self) -> None:

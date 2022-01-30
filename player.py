@@ -22,6 +22,7 @@ class Player(combat.Battler):
         self.lvl = 1 # Player Lvl
         self.xp = 0 # Current xp
         self.xpToNextLvl = 35 # Amount of xp to reach next lvl is multiplied by 1.5 per level
+        self.comboPoints = 0
         self.aptitudes = {'str' : 5,
                     'dex' : 5,
                     'int' : 5,
@@ -50,6 +51,10 @@ class Player(combat.Battler):
         
         self.isAlly = True # Check if battler is an ally or not
     
+    def normal_attack(self, defender):
+        self.addComboPoints(1)
+        return super().normal_attack(defender)
+
     # Equip an item (must be of type 'Equipment')
     def equip_item(self, equipment):
         if type(equipment) == inventory.Equipment:
@@ -172,3 +177,6 @@ class Player(combat.Battler):
         print('/// COMPLETED ///')
         for cmpq in self.completedQuests:
             cmpq.show_info()
+
+    def addComboPoints(self, points):
+        self.comboPoints += points

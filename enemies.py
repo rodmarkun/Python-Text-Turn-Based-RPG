@@ -1,6 +1,10 @@
 from random import randint
 import combat
 
+'''
+Enemy class definitions, specially for custom stats and rewards.
+'''
+
 class Imp(combat.Enemy):
     def __init__(self) -> None:
         stats = {'maxHp' : 18,

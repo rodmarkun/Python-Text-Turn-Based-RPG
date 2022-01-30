@@ -8,33 +8,65 @@ Parent class for all instances that can enter in combat.
 A Battler will always be either an Enemy, a Player's ally or the Player himself
 '''
 class Battler():
+    '''
+    Parent class for all instances that can enter in combat.
+    A Battler will always be either an Enemy, a Player's ally or the Player himself
 
+    Attributes:
+    name : str
+        Name of the battler.
+    stats : dict
+        Stats of the battler, dictionary ex: {'atk' : 3}.
+    alive : bool              
+        Bool for battler being alive or dead.
+    buffsAndDebuffs : list     
+        List of buffs and debuffs battler currently has.
+    isAlly : bool             
+        Bool for battler being a Player's ally or not.
+    '''
     def __init__(self, name, stats) -> None:
         self.name = name
         self.stats = stats
         self.alive = True
         self.buffsAndDebuffs = []
         self.isAlly = False
-        self.comboPoints = 0
 
-    # Taking damage from a certain source
     def take_dmg(self, dmg):
+        '''
+        Function for battlers taking damage from any source.
+        Subtracts the damage quantity from its health. Also checks if it dies.
+
+        Parameters:
+        dmg : int     
+            Quantity of damage dealt
+        '''
         if dmg < 0: dmg = 0
         self.stats['hp'] -= dmg
-        print('{} takes {} damage!'.format(self.name, dmg))
+        print(f'{self.name} takes {dmg} damage!')
         # Defender dies
         if self.stats['hp'] <= 0:
-            print('{} has been slain.'.format(self.name))
+            print(f'{self.name} has been slain.')
             self.alive = False
 
-    # Normal attack all battlers have
     def normal_attack(self, defender):
-        print('{} attacks!'.format(self.name))
+        '''
+        Normal attack all battlers have.
+
+        Damage is calculated as follows:
+        attacker_atk * (100/(100 + defender_def * 1.5))
+
+        Parameters:
+        defender : Battler
+            Defending battler
+
+        Returns:
+        dmg : int        
+            Damage dealt to defender
+        '''
+        print(f'{self.name} attacks!')
         dmg = round(self.stats['atk'] * (100/(100 + defender.stats['def']*1.5)))
         # Check for critical attack
-        if self.stats['critCh'] > random.randint(0, 100):
-            print('Critical blow!')
-            dmg *= 2
+        dmg = self.check_critical(dmg)
         # Check for missed attack
         if not check_miss(self, defender):
             defender.take_dmg(dmg)
@@ -42,28 +74,64 @@ class Battler():
             dmg = 0
         return dmg
 
-    # Target recovers a certain amount of mp
+    def check_critical(self, dmg):
+        '''
+        Checks if an attack is critical. If it is, doubles its damage.
+
+        Critical chance comes by the battler's stat: 'critCh'
+
+        Parameters:
+        dmg : int     
+            Base damage dealt
+
+        Returns:
+        dmg : int 
+            Damage dealt (after checking and operating if critical)
+        '''
+        if self.stats['critCh'] > random.randint(0, 100):
+            print('Critical blow!')
+            return dmg * 2
+        else:
+            return dmg
+
     def recover_mp(self, amount):
+        '''
+        Battler recovers certain amount of 'mp' (Mana Points).
+
+        Parameters:
+        amount : int      
+            Amount of mp recovered
+        '''
         if self.stats['mp'] + amount > self.stats['maxMp']:
             fully_recover_mp(self)
         else:
             self.stats['mp'] += amount
-        print('{} recovers {} mp!'.format(self.name, amount))
+        print(f'{self.name} recovers {amount} mp!')
 
-    # Target recovers a certain amount of hp
     def heal(self, amount):
+        '''
+        Battler recovers certain amount of 'hp' (Health Points).
+
+        Parameters:
+        amount : int     
+            Amount of hp recovered
+        '''
         if self.stats['hp'] + amount > self.stats['maxHp']:
             fully_heal(self)
         else:
             self.stats['hp'] += amount
-        print('{} heals {} hp!'.format(self.name, amount))
-    
-    # Adds a certain amount of combo points
-    def addComboPoints(self, points):
-        self.comboPoints += points
+        print(f'{self.name} heals {amount} hp!')
 
 class Enemy(Battler):
-    
+    '''
+    Base class for all enemies. Inherits class 'Battler'.
+
+    Attributes:
+    xpReward : int    
+        Amount of xp (Experience Points) given when slain
+    goldReward : int 
+        Amount of gold (coins/money) given when slain
+    '''
     def __init__(self, name, stats, xpReward, goldReward) -> None:
         super().__init__(name, stats)
         self.xpReward = xpReward
@@ -75,22 +143,40 @@ Main combat loop
 '''
 
 def combat(myPlayer, enemies):
+    '''
+    Handles the main combat loop between allies and enemies.
+
+    Parameters:
+    myPlayer : Player
+        Actual player
+    enemies : list     
+        List of enemies to combat
+
+    Note:
+    myPlayer should be changed to be a list named 'allies' if you can begin
+    the combat with multiple allies. Currently, you can only get allies
+    via summoning spells so this was not necessary.
+    '''
     # All battlers are inserted into the Battlers list and ordered by speed (turn order)
-    allies = [myPlayer]
-    battlers = define_battlers(allies, enemies)
+    allies = [myPlayer] # List of current allies
+    battlers = define_battlers(allies, enemies) # List of current Battlers (Allies + Enemies)
+
+    # Sum of all exp and money the enemies drop when defeated
     enemy_exp = 0 
     enemy_money = 0
 
     print('############################')
     for enemy in enemies:
-        print('A wild {} has appeared!'.format(enemy.name))
+        print(f'A wild {enemy.name} has appeared!')
         enemy_exp += enemy.xpReward
         enemy_money += enemy.goldReward
     # The battle will go on while the player is still alive and there are still enemies to defeat
     while myPlayer.alive and len(enemies) > 0:
         # Battlers should be updated for speed changes (buffs/debuffs)
         battlers = define_battlers(allies, enemies)
+        # Each battler has its turn
         for battler in battlers:
+            # Player can choose its actions
             if type(battler) == player.Player:
                 text.combat_menu(myPlayer, allies, enemies)
                 cmd = input('> ').lower()
@@ -101,12 +187,14 @@ def combat(myPlayer, enemies):
                 if 'a' in cmd:
                     targeted_enemy = select_target(enemies)
                     battler.normal_attack(targeted_enemy)
-                    battler.addComboPoints(1)
                     check_if_dead(allies, enemies, battlers)
                 # Cast a spell
+                # TODO: Change most of this for a function for both combos and spells, making this not
+                # so hell of unreadable.
                 elif 's' in cmd:
                     text.spell_menu(battler)
                     option = int(input("> "))
+                    # TODO: Change to ENUMERATE
                     while option not in range(len(myPlayer.spells)+1):
                         print('Please enter a valid number')
                         option = int(input("> "))
@@ -144,6 +232,7 @@ def combat(myPlayer, enemies):
                                 comboChosen.effect(myPlayer, enemies)
                                 check_if_dead(allies, enemies, battlers)
             else:
+                # Allies attack a random enemy
                 if battler.isAlly:
                     if len(enemies) > 0:
                         randomEnemy = random.choice(enemies)
@@ -169,9 +258,20 @@ def combat(myPlayer, enemies):
         # Restart Combo Points
         myPlayer.comboPoints = 0
 
-# Returns the battlers list, ordered by speed (turn order)
-# This should be updated to when the change from "player" to "allies" is made.
 def define_battlers(allies, enemies):
+    '''
+    Returns the battlers list, ordered by speed (turn order).
+
+    Parameters:
+    allies : List
+        List of ally Battlers
+    enemies : List
+        List of enemy Battlers
+
+    Returns:
+    battlers : List
+        List of enemies + allies, ordered by speed
+    '''
     battlers = enemies.copy()
     for ally in allies:
         battlers.append(ally)
@@ -180,7 +280,19 @@ def define_battlers(allies, enemies):
 
 # Select a certain target from the battlefield
 def select_target(targets):
+    '''
+    Selects a certain target from the battlefield.
+
+    Parameters:
+    targets : list
+        List of all possible target Battlers
+
+    Return:
+    target : Battler
+        Selected target
+    '''
     text.select_objective(targets)
+    # TODO: There must be an easier way to do this
     valid_target = False
     while not valid_target:
         valid_int = False
@@ -191,6 +303,7 @@ def select_target(targets):
                 valid_int = True
             except:
                 print('Please enter a number')
+        # TODO: Change to ENUMERATE
         if i not in range(len(targets)+1):
             print('Select a valid target')
             valid_target = False
@@ -201,15 +314,42 @@ def select_target(targets):
 
 # Returns True if attack misses, False if it doesn't
 def check_miss(attacker, defender):
+    '''
+    Checks if an attack misses or not. Miss chance is determined by the following formula:
+
+    chance = math.floor(math.sqrt(max(0, (5 * defender.stats['speed'] - attacker.stats['speed'] * 2))))
+
+    I tried different formulas and this one ended up being pretty competent. Check if
+    it fits you anyway.
+
+    Parameters:
+    attacker : Battler
+        Battler that performs the attack
+    defender : Battler
+        Defending battler
+
+    Returns:
+    True/False : Bool
+        True if the attack missed. False if it doesn't.
+    '''
     chance = math.floor(math.sqrt(max(0, (5 * defender.stats['speed'] - attacker.stats['speed'] * 2))))
     if chance > random.randint(0, 100):
-        print('{}\'s attack missed!'.format(attacker.name))
+        print(f'{attacker.name}\'s attack missed!')
         return True
     return False
 
-# Checks if buffs and debuffs should still be active
-# If deactivate = True they will inmediately deactivate
 def check_turns_buffs_and_debuffs(target, deactivate):
+    '''
+    Checks if buffs and debuffs should still be active (checks its turn count).
+
+    Parameters:
+    target : Battler
+        Battler whose buffs and debuffs should be checked
+    deactivate : bool
+        If true, buffs and debuffs deactivate instantly regardless of turn count
+        (useful when ending a combat or any similar situation). If false, acts
+        normally.
+    '''
     if deactivate:
         for bd in target.buffsAndDebuffs:
             bd.deactivate()
@@ -219,6 +359,20 @@ def check_turns_buffs_and_debuffs(target, deactivate):
 
 # Checks if a battler is dead and removes it from the appropiate lists
 def check_if_dead(allies, enemies, battlers):
+    '''
+    Checks if current battlers are dead and if they are, removes them from
+    the corresponding lists.
+
+    Parameters:
+    allies : List
+        List of ally Battlers
+    enemies : List
+        List of enemy Battlers
+    battlers : List
+        List of all battlers
+    '''
+    # TODO: This can probably be done in an easier way, but iterating
+    # while deleting objects leads to weird stuff happening.
     dead_bodies = []
     for ally in allies:
         if ally.alive == False:
@@ -234,29 +388,51 @@ def check_if_dead(allies, enemies, battlers):
         elif dead in allies:
             allies.remove(dead)
 
-# Fully heal a target
 def fully_heal(target):
+    '''
+    Fully heals a target.
+
+    Parameters:
+    target : Battler
+        Battler to fully heal
+    '''
     target.stats['hp'] = target.stats['maxHp']
 
 def fully_recover_mp(target):
+    '''
+    Fully recovers target's mp.
+
+    Parameters:
+    target : Battler
+        Battler to fully recover
+    '''
     target.stats['mp'] = target.stats['maxMp']
 
-def create_enemy_group(lvl):
-    from enemies import possible_enemies
+def create_enemy_group(lvl, possible_enemies, enemy_quantity_for_level):
+    '''
+    Creates a corresponding group of enemies depending on player's lvl
+
+    Parameters:
+    lvl : int
+        Player's lvl
+    possible_enemies : Dictionary
+        Dictionary of enemies to appear and their respective lvl range,
+        follows this syntax: {enemyClass : (lowestLvlToAppear, highestLvlToAppear)}
+    enemy_quantity_for_level : Dictionary
+        Dictionary of number of enemies to appear based on level,
+        follows this syntax: {levelUpToThisQuantityToAppear, Quantity}
+        for example, {3 : 1} means that up to level 3, only 1 enemy will appear.
+
+    Returns:
+    enemy_group : List
+        List of enemy Battlers to appear
+    '''
+
     enemies_to_appear = []
     for enemy in possible_enemies:
         lowlvl, highlvl = possible_enemies[enemy]
         if lowlvl <= lvl <= highlvl:
             enemies_to_appear.append(enemy)
-    
-    # Dictionary for quantity of enemies to battle.
-    # If lvl < 5 -> up to 3 enemies
-    # If lvl < 10 -> up to 4 enemies
-    # ...
-    enemy_quantity_for_level = {3 : 1,
-                                5 : 2, 
-                                10 : 3, 
-                                100 : 4}
     
     max_enemies = 1
     for max_level in enemy_quantity_for_level:
