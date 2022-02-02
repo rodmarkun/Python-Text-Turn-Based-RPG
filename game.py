@@ -7,6 +7,9 @@ import text, player, items, events
 
 ##### Title Screen #####
 def title_screen_selections():
+    '''
+    Title screen selections with options to Play, get Help or Exit.
+    '''
     text.title_screen()
     option = input("> ")
     while option not in ['1','2','3']:
@@ -21,6 +24,13 @@ def title_screen_selections():
 
 ##### Inventory menu #####
 def inventory_selections(player):
+    '''
+    Inventory menu, for using, dropping or equipping items.
+
+    Parameters:
+    player : Player
+        Player which inventory is to be accessed.
+    '''
     option = input("> ")
     while option.lower() != 'q':
         if option.lower() == 'u':
@@ -35,16 +45,24 @@ def inventory_selections(player):
 
 ##### Initializing function #####
 def play():
+    '''
+    Main function for playing the game.
+    '''
     # Player instantiation
     myPlayer = player.Player("Test Player")
 
     give_initial_items(myPlayer)
 
+    # Event chances (in %)
+    combat_chance = 65
+    shop_chance = 20
+    heal_chance = 15
+
     while myPlayer.alive:
         text.play_menu()
         option = input("> ")
         if option == '1':
-            generate_event(myPlayer)
+            generate_event(myPlayer, combat_chance, shop_chance, heal_chance)
         elif option == '2':
             text.showStats(myPlayer)
         elif option == '3':
@@ -59,6 +77,13 @@ def play():
             print("Please enter a valid command")
 
 def give_initial_items(myPlayer):
+    '''
+    Gives the player its initial items based on a choice.
+
+    Parameters:
+    myPlayer : Player
+        Player to give the initial items to.
+    '''
     print(text.initial_event_text)
     option = str(input("> "))
     while option not in ['1', '2', '3']:
@@ -75,16 +100,26 @@ def give_initial_items(myPlayer):
         items.grimoireFireball.add_to_inventory_player(myPlayer.inventory)
     print('[ Remember to equip these items in Inventory > Equip Items ]')
 
-def generate_event(myPlayer):
-    # Event chances (in %)
-    combat_chance = 65
-    shop_chance = 20
-    heal_chance = 15
+def generate_event(myPlayer, combat_chance, shop_chance, heal_chance):
+    '''
+    Generates a random event for the player based on specified chances.
+    Also handles quest completion.
 
+    Parameters:
+    myPlayer : Player
+        Player affected by the event
+    combat_chance : int
+        Chance to generate a combat event in %
+    shop_chance : int
+        Chance to generate a shop event in %
+    heal_chance : int
+        Chance to generate a healing event in %
+    '''
     eventList = random.choices(events.event_type_list, weights=(combat_chance, shop_chance, heal_chance), k=1)
     # random.choices returns a list so we need to use eventList[0]
     event = random.choice(eventList[0])
     event.effect(myPlayer)
+    # TODO: Rework this
     if event.isUnique:
         for evList in events.event_type_list:
             for e in evList:
