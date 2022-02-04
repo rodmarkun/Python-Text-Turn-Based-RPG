@@ -119,7 +119,7 @@ def generate_event(myPlayer, combat_chance, shop_chance, heal_chance):
     # random.choices returns a list so we need to use eventList[0]
     event = random.choice(eventList[0])
     event.effect(myPlayer)
-    # TODO: Rework this
+    # TODO: There must be an easier way to do this.
     if event.isUnique:
         for evList in events.event_type_list:
             for e in evList:

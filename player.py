@@ -60,7 +60,6 @@ class Player(combat.Battler):
         self.xp = 0 # Current xp
         self.xpToNextLvl = 35 # Amount of xp to reach next lvl is multiplied by 1.5 per level
         self.comboPoints = 0
-        # TODO: Change aptitudes a bit
         self.aptitudes = {'str' : 5,
                     'dex' : 5,
                     'int' : 5,
@@ -152,7 +151,7 @@ class Player(combat.Battler):
         while(self.xp >= self.xpToNextLvl):
             self.xp -= self.xpToNextLvl
             self.lvl += 1
-            # TODO: Change this formula?
+            # You can change this formula for different exp progression
             self.xpToNextLvl = round(self.xpToNextLvl * 1.5 + 10 * self.lvl * self.lvl)
             for stat in self.stats:
                 self.stats[stat] += 1
@@ -231,7 +230,6 @@ class Player(combat.Battler):
         while i != 0:
             if i <= len(vendor.inventory.items) and i > 0:
                 vendor.inventory.items[i-1].buy(self)
-                # TODO: Change this
                 if vendor.inventory.items[i-1].amount <= 0:
                     vendor.inventory.items.pop(i - 1)
                 vendor.inventory.show_inventory()

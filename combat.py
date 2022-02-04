@@ -189,48 +189,11 @@ def combat(myPlayer, enemies):
                     battler.normal_attack(targeted_enemy)
                     check_if_dead(allies, enemies, battlers)
                 # Cast a spell
-                # TODO: Change most of this for a function for both combos and spells, making this not
-                # so hell of unreadable.
                 elif 's' in cmd:
-                    text.spell_menu(battler)
-                    option = int(input("> "))
-                    # TODO: Change to ENUMERATE
-                    while option not in range(len(myPlayer.spells)+1):
-                        print('Please enter a valid number')
-                        option = int(input("> "))
-                    if option != 0:
-                        spellChosen = myPlayer.spells[option - 1]
-                        if spellChosen.isTargeted:
-                            target = select_target(battlers)
-                            spellChosen.effect(myPlayer, target)
-                            check_if_dead(allies, enemies, battlers)
-                        else:
-                            if spellChosen.defaultTarget == 'self':
-                                spellChosen.effect(myPlayer, myPlayer)
-                            elif spellChosen.defaultTarget == 'all_enemies':
-                                spellChosen.effect(myPlayer, enemies)
-                                check_if_dead(allies, enemies, battlers)
-                            elif spellChosen.defaultTarget == 'allies':
-                                spellChosen.effect(myPlayer, allies)
+                    spell_menu(myPlayer, battlers, allies, enemies)
                 # Use a combo
                 elif 'c' in cmd:
-                    text.combo_menu(battler)
-                    option = int(input("> "))
-                    while option not in range(len(myPlayer.combos)+1):
-                        print('Please enter a valid number')
-                        option = int(input("> "))
-                    if option != 0:
-                        comboChosen = myPlayer.combos[option - 1]
-                        if comboChosen.isTargeted:
-                            target = select_target(battlers)
-                            comboChosen.effect(myPlayer, target)
-                            check_if_dead(allies, enemies, battlers)
-                        else:
-                            if comboChosen.defaultTarget == 'self':
-                                comboChosen.effect(myPlayer, myPlayer)
-                            elif comboChosen.defaultTarget == 'all_enemies':
-                                comboChosen.effect(myPlayer, enemies)
-                                check_if_dead(allies, enemies, battlers)
+                    combo_menu(myPlayer, battlers, allies, enemies)
             else:
                 # Allies attack a random enemy
                 if battler.isAlly:
@@ -303,7 +266,6 @@ def select_target(targets):
                 valid_int = True
             except:
                 print('Please enter a number')
-        # TODO: Change to ENUMERATE
         if i not in range(len(targets)+1):
             print('Select a valid target')
             valid_target = False
@@ -311,6 +273,72 @@ def select_target(targets):
             valid_target = True
     target = targets[i-1]
     return target
+
+def spell_menu(myPlayer, battlers, allies, enemies):
+    '''
+    Player selects a target spell to cast.
+
+    Parameters:
+    myPlayer : Player
+        Player caster of the spell.
+    battlers : List
+        List of Battlers in the combat.
+    allies : List
+        List of allies in the combat.
+    enemies : List
+        List of enemies in the combat.
+    '''
+    text.spell_menu(myPlayer)
+    option = int(input("> "))
+    while option not in range(len(myPlayer.spells)+1):
+        print('Please enter a valid number')
+        option = int(input("> "))
+    if option != 0:
+        spellChosen = myPlayer.spells[option - 1]
+        if spellChosen.isTargeted:
+            target = select_target(battlers)
+            spellChosen.effect(myPlayer, target)
+            check_if_dead(allies, enemies, battlers)
+        else:
+            if spellChosen.defaultTarget == 'self':
+                spellChosen.effect(myPlayer, myPlayer)
+            elif spellChosen.defaultTarget == 'all_enemies':
+                spellChosen.effect(myPlayer, enemies)
+                check_if_dead(allies, enemies, battlers)
+            elif spellChosen.defaultTarget == 'allies':
+                spellChosen.effect(myPlayer, allies)
+
+def combo_menu(myPlayer, battlers, allies, enemies):
+    '''
+    Player selects a target combo to perform.
+
+    Parameters:
+    myPlayer : Player
+        Player that performs the combo.
+    battlers : List
+        List of Battlers in the combat.
+    allies : List
+        List of allies in the combat.
+    enemies : List
+        List of enemies in the combat.
+    '''
+    text.combo_menu(myPlayer)
+    option = int(input("> "))
+    while option not in range(len(myPlayer.combos)+1):
+        print('Please enter a valid number')
+        option = int(input("> "))
+    if option != 0:
+        comboChosen = myPlayer.combos[option - 1]
+        if comboChosen.isTargeted:
+            target = select_target(battlers)
+            comboChosen.effect(myPlayer, target)
+            check_if_dead(allies, enemies, battlers)
+        else:
+            if comboChosen.defaultTarget == 'self':
+                comboChosen.effect(myPlayer, myPlayer)
+            elif comboChosen.defaultTarget == 'all_enemies':
+                comboChosen.effect(myPlayer, enemies)
+                check_if_dead(allies, enemies, battlers)
 
 # Returns True if attack misses, False if it doesn't
 def check_miss(attacker, defender):
