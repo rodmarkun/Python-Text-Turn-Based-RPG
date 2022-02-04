@@ -1,14 +1,22 @@
+from constants import VERSION
+
 def title_screen():
     print('############################')
     print('# Welcome to the text RPG! #')
     print('############################')
     print('#         1 - Play         #')
-    print('#         2 - Help         #')
+    print('#         2 - About        #')
     print('#         3 - Quit         #')
     print('############################')
 
-def help_menu():
-    print("Do you really need help in here? LMAO")
+def about_menu():
+    print(f'Python Text Turn-Based RPG System v{VERSION}')
+    print('Made by Pablo Rodríguez Martín (@rodmarkun)')
+    print('\nHello there! What lies before your eyes is an attempt of making a functional\
+\nturn-based RPG completely in Python. Keep in mind that it is more about making a system rather than a whole game.')
+    print('You can battle enemies, purchase items from shops, complete quests, learn spells\
+\nand combos...')
+    print('\nI highly recommend checking the code and modifying whatever you want. Have fun!')
 
 def play_menu():
     print('############################')   

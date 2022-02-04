@@ -10,17 +10,19 @@ def title_screen_selections():
     '''
     Title screen selections with options to Play, get Help or Exit.
     '''
-    text.title_screen()
-    option = input("> ")
-    while option not in ['1','2','3']:
-        print("Please enter a valid command")
+    alive = True
+    while alive:
+        text.title_screen()
         option = input("> ")
-    if option == '1':
-        play()
-    elif option == '2':
-        text.help_menu()
-    elif option == '3':
-        sys.exit()
+        while option not in ['1','2','3']:
+            print("Please enter a valid command")
+            option = input("> ")
+        if option == '1':
+            alive = play()
+        elif option == '2':
+            text.about_menu()
+        elif option == '3':
+            sys.exit()
 
 ##### Inventory menu #####
 def inventory_selections(player):
@@ -47,6 +49,10 @@ def inventory_selections(player):
 def play():
     '''
     Main function for playing the game.
+
+    Returns:
+    alive : bool
+        False when the game ends (player dies)
     '''
     # Player instantiation
     myPlayer = player.Player("Test Player")
@@ -75,6 +81,7 @@ def play():
             myPlayer.show_quests()
         else:
             print("Please enter a valid command")
+    return False
 
 def give_initial_items(myPlayer):
     '''
